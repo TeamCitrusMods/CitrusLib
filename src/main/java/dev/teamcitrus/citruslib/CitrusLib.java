@@ -1,5 +1,8 @@
 package dev.teamcitrus.citruslib;
 
+import dev.teamcitrus.citruslib.network.PayloadHelper;
+import dev.teamcitrus.citruslib.reload.ReloadListenerPackets;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -10,13 +13,21 @@ import org.apache.logging.log4j.Logger;
 @Mod(CitrusLib.MODID)
 public class CitrusLib {
     public static final String MODID = "citruslib";
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public CitrusLib(IEventBus bus) {
         bus.register(this);
+        bus.register(new PayloadHelper());
     }
 
     @SubscribeEvent
     private void commonSetup(final FMLCommonSetupEvent event) {
+        PayloadHelper.registerPayload(new ReloadListenerPackets.Start.Provider());
+        PayloadHelper.registerPayload(new ReloadListenerPackets.Content.Provider<>());
+        PayloadHelper.registerPayload(new ReloadListenerPackets.End.Provider());
+    }
+
+    public static ResourceLocation modLoc(String id) {
+        return new ResourceLocation(MODID, id);
     }
 }
