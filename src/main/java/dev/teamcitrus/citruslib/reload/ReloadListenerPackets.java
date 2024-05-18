@@ -23,7 +23,6 @@ import java.util.Optional;
 @ApiStatus.Internal
 public class ReloadListenerPackets {
     public static record Start(String path) implements CustomPacketPayload {
-
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_start");
 
         @Override

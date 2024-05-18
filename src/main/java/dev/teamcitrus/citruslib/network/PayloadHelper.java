@@ -60,7 +60,6 @@ public class PayloadHelper {
     }
 
     private static class PayloadHandler<T extends CustomPacketPayload, C extends IPayloadContext> implements IPayloadHandler<T> {
-
         private PayloadProvider<T, C> provider;
         private Optional<PacketFlow> flow;
         private List<ConnectionProtocol> protocols;

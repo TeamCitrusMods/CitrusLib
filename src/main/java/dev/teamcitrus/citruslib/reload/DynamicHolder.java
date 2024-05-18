@@ -14,12 +14,9 @@ import java.util.function.Supplier;
  */
 public class DynamicHolder<T> implements Supplier<T> {
     public static final ResourceLocation EMPTY = new ResourceLocation("empty", "empty");
-
     protected final DynamicRegistry<? super T> registry;
     protected final ResourceLocation id;
-
-    @Nullable
-    protected T value;
+    @Nullable protected T value;
 
     DynamicHolder(DynamicRegistry<? super T> registry, ResourceLocation id) {
         this.id = id;
@@ -51,6 +48,7 @@ public class DynamicHolder<T> implements Supplier<T> {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public boolean equals(Object obj) {
         return this == obj || obj instanceof DynamicHolder dh && dh.registry == this.registry && dh.id.equals(this.id);
     }
