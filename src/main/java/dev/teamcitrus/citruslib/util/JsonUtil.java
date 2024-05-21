@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 public class JsonUtil {
     public static boolean checkAndLogEmpty(JsonElement e, ResourceLocation id, String type, Logger logger) {

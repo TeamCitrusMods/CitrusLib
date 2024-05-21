@@ -20,13 +20,12 @@ import java.util.Optional;
 /**
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 public class PayloadHelper {
     private static final Map<ResourceLocation, PayloadProvider<?, ?>> ALL_PROVIDERS = new HashMap<>();
     private static boolean locked = false;
 
-    @SuppressWarnings("unchecked")
     public static <T extends CustomPacketPayload, C extends IPayloadContext> void registerPayload(PayloadProvider<T, C> prov) {
         Preconditions.checkNotNull(prov);
         synchronized (ALL_PROVIDERS) {

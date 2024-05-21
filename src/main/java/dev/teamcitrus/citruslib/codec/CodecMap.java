@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
     protected final String name;

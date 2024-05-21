@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 /**
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extends SimpleJsonResourceReloadListener {
     protected final Logger logger;

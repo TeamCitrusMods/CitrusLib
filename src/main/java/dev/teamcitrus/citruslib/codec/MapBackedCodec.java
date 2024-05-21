@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * @see CitrusCodecs#mapBackedDefaulted(String, BiMap, Codec)
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class MapBackedCodec<V extends CodecProvider<? super V>> implements Codec<V> {
