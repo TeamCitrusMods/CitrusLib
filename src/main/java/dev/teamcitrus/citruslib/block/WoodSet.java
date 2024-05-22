@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.*;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.Collection;
 import java.util.Map;
@@ -13,19 +14,19 @@ public class WoodSet {
     public static final Codec<WoodSet> CODEC = ExtraCodecs.stringResolverCodec(WoodSet::getID, SET::get);
 
     private final String id;
-    private final Block planks;
-    private final StairBlock stairs;
-    private final SlabBlock slab;
-    private final FenceBlock fence;
-    private final FenceGateBlock fenceGate;
-    private final DoorBlock door;
-    private final TrapDoorBlock trapDoor;
-    private final PressurePlateBlock pressurePlate;
-    private final ButtonBlock button;
+    private final DeferredBlock<Block> planks;
+    private final DeferredBlock<StairBlock> stairs;
+    private final DeferredBlock<SlabBlock> slab;
+    private final DeferredBlock<FenceBlock> fence;
+    private final DeferredBlock<FenceGateBlock> fenceGate;
+    private final DeferredBlock<DoorBlock> door;
+    private final DeferredBlock<TrapDoorBlock> trapDoor;
+    private final DeferredBlock<PressurePlateBlock> pressurePlate;
+    private final DeferredBlock<ButtonBlock> button;
 
-    public WoodSet(String id, Block planks, StairBlock stairs, SlabBlock slab,
-                   FenceBlock fence, FenceGateBlock fenceGate, DoorBlock door,
-                   TrapDoorBlock trapDoor, PressurePlateBlock pressurePlate, ButtonBlock button
+    public WoodSet(String id, DeferredBlock<Block> planks, DeferredBlock<StairBlock> stairs, DeferredBlock<SlabBlock> slab,
+                   DeferredBlock<FenceBlock> fence, DeferredBlock<FenceGateBlock> fenceGate, DeferredBlock<DoorBlock> door,
+                   DeferredBlock<TrapDoorBlock> trapDoor, DeferredBlock<PressurePlateBlock> pressurePlate, DeferredBlock<ButtonBlock> button
     ) {
         this.id = id;
         this.planks = planks;
@@ -51,39 +52,39 @@ public class WoodSet {
         return this.id;
     }
 
-    public Block getPlanks() {
+    public DeferredBlock<Block> getPlanks() {
         return this.planks;
     }
 
-    public StairBlock getStairs() {
+    public DeferredBlock<StairBlock> getStairs() {
         return this.stairs;
     }
 
-    public SlabBlock getSlab() {
+    public DeferredBlock<SlabBlock> getSlab() {
         return this.slab;
     }
 
-    public FenceBlock getFence() {
+    public DeferredBlock<FenceBlock> getFence() {
         return this.fence;
     }
 
-    public FenceGateBlock getFenceGate() {
+    public DeferredBlock<FenceGateBlock> getFenceGate() {
         return this.fenceGate;
     }
 
-    public DoorBlock getDoor() {
+    public DeferredBlock<DoorBlock> getDoor() {
         return this.door;
     }
 
-    public TrapDoorBlock getTrapDoor() {
+    public DeferredBlock<TrapDoorBlock> getTrapDoor() {
         return this.trapDoor;
     }
 
-    public PressurePlateBlock getPressurePlate() {
+    public DeferredBlock<PressurePlateBlock> getPressurePlate() {
         return this.pressurePlate;
     }
 
-    public ButtonBlock getButton() {
+    public DeferredBlock<ButtonBlock> getButton() {
         return this.button;
     }
 }

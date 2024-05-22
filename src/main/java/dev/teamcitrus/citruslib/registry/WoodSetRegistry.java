@@ -21,7 +21,7 @@ public class WoodSetRegistry {
         DeferredBlock<TrapDoorBlock> trapdoor = register.register(woodName + "_trapdoor", () -> new TrapDoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR)));
         DeferredBlock<PressurePlateBlock> pressure_plate = register.register(woodName + "_pressure_plate", () -> new PressurePlateBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)));
         DeferredBlock<ButtonBlock> button = register.register(woodName + "_button", () -> new ButtonBlock(blockType, 30, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON)));
-        WoodSet.register(new WoodSet(woodName, planks.get(), stairs.get(), slab.get(), fence.get(), fenceGate.get(),
-                door.get(), trapdoor.get(), pressure_plate.get(), button.get()));
+        WoodSet.register(new WoodSet(woodName, planks, stairs, slab, fence, fenceGate,
+                door, trapdoor, pressure_plate, button));
     }
 }
