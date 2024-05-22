@@ -17,26 +17,26 @@ public abstract class CitrusBlockTagProvider extends BlockTagsProvider {
     }
 
     public void generateWoodTags(WoodSet woodSet) {
-        tag(BlockTags.PLANKS).add(woodSet.getPlanks());
-        tag(BlockTags.STAIRS).add(woodSet.getStairs());
-        tag(BlockTags.WOODEN_STAIRS).add(woodSet.getStairs());
-        tag(BlockTags.SLABS).add(woodSet.getSlab());
-        tag(BlockTags.WOODEN_SLABS).add(woodSet.getSlab());
-        tag(BlockTags.FENCES).add(woodSet.getFence());
-        tag(BlockTags.WOODEN_FENCES).add(woodSet.getFence());
-        tag(BlockTags.FENCE_GATES).add(woodSet.getFenceGate());
-        tag(Tags.Blocks.FENCE_GATES_WOODEN).add(woodSet.getFenceGate());
-        tag(BlockTags.DOORS).add(woodSet.getDoor());
-        tag(BlockTags.WOODEN_DOORS).add(woodSet.getDoor());
-        tag(BlockTags.TRAPDOORS).add(woodSet.getTrapDoor());
-        tag(BlockTags.WOODEN_TRAPDOORS).add(woodSet.getTrapDoor());
-        tag(BlockTags.PRESSURE_PLATES).add(woodSet.getPressurePlate());
-        tag(BlockTags.WOODEN_PRESSURE_PLATES).add(woodSet.getPressurePlate());
-        tag(BlockTags.BUTTONS).add(woodSet.getButton());
-        tag(BlockTags.WOODEN_BUTTONS).add(woodSet.getButton());
-        tag(BlockTags.MINEABLE_WITH_AXE).add(woodSet.getPlanks(), woodSet.getSlab(), woodSet.getStairs(),
-                woodSet.getFence(), woodSet.getFenceGate(), woodSet.getDoor(), woodSet.getTrapDoor(),
-                woodSet.getPressurePlate(), woodSet.getButton()
+        tag(BlockTags.PLANKS).add(woodSet.getPlanks().get());
+        tag(BlockTags.STAIRS).add(woodSet.getStairs().get());
+        tag(BlockTags.WOODEN_STAIRS).add(woodSet.getStairs().get());
+        tag(BlockTags.SLABS).add(woodSet.getSlab().get());
+        tag(BlockTags.WOODEN_SLABS).add(woodSet.getSlab().get());
+        tag(BlockTags.FENCES).add(woodSet.getFence().get());
+        tag(BlockTags.WOODEN_FENCES).add(woodSet.getFence().get());
+        tag(BlockTags.FENCE_GATES).add(woodSet.getFenceGate().get());
+        tag(Tags.Blocks.FENCE_GATES_WOODEN).add(woodSet.getFenceGate().get());
+        tag(BlockTags.DOORS).add(woodSet.getDoor().get());
+        tag(BlockTags.WOODEN_DOORS).add(woodSet.getDoor().get());
+        tag(BlockTags.TRAPDOORS).add(woodSet.getTrapDoor().get());
+        tag(BlockTags.WOODEN_TRAPDOORS).add(woodSet.getTrapDoor().get());
+        tag(BlockTags.PRESSURE_PLATES).add(woodSet.getPressurePlate().get());
+        tag(BlockTags.WOODEN_PRESSURE_PLATES).add(woodSet.getPressurePlate().get());
+        tag(BlockTags.BUTTONS).add(woodSet.getButton().get());
+        tag(BlockTags.WOODEN_BUTTONS).add(woodSet.getButton().get());
+        tag(BlockTags.MINEABLE_WITH_AXE).add(woodSet.getPlanks().get(), woodSet.getSlab().get(), woodSet.getStairs().get(),
+                woodSet.getFence().get(), woodSet.getFenceGate().get(), woodSet.getDoor().get(), woodSet.getTrapDoor().get(),
+                woodSet.getPressurePlate().get(), woodSet.getButton().get()
         );
     }
 }
