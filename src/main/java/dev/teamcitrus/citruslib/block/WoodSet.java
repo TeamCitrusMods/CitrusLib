@@ -40,8 +40,9 @@ public class WoodSet {
         this.button = button;
     }
 
-    public static void register(WoodSet woodSet) {
+    public static WoodSet register(WoodSet woodSet) {
         SET.put(woodSet.getID(), woodSet);
+        return woodSet;
     }
 
     public static Collection<WoodSet> values() {

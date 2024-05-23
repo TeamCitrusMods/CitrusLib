@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class WoodSetRegistry {
-    public static void registerWoodSet(DeferredRegister.Blocks register, String woodName) {
+    public static WoodSet registerWoodSet(DeferredRegister.Blocks register, String woodName) {
         BlockSetType blockType = new BlockSetType(woodName);
         WoodType woodType = new WoodType(woodName, blockType);
         DeferredBlock<Block> planks = register.register(woodName + "_planks", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
@@ -21,7 +21,7 @@ public class WoodSetRegistry {
         DeferredBlock<TrapDoorBlock> trapdoor = register.register(woodName + "_trapdoor", () -> new TrapDoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR)));
         DeferredBlock<PressurePlateBlock> pressure_plate = register.register(woodName + "_pressure_plate", () -> new PressurePlateBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)));
         DeferredBlock<ButtonBlock> button = register.register(woodName + "_button", () -> new ButtonBlock(blockType, 30, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON)));
-        WoodSet.register(new WoodSet(woodName, planks, stairs, slab, fence, fenceGate,
+        return WoodSet.register(new WoodSet(woodName, planks, stairs, slab, fence, fenceGate,
                 door, trapdoor, pressure_plate, button));
     }
 }
