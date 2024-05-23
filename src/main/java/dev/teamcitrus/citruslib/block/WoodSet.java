@@ -1,10 +1,12 @@
 package dev.teamcitrus.citruslib.block;
 
 import com.mojang.serialization.Codec;
+import dev.teamcitrus.citruslib.registry.WoodSetRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.*;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collection;
 import java.util.Map;
@@ -24,6 +26,10 @@ public class WoodSet {
     private final DeferredBlock<PressurePlateBlock> pressurePlate;
     private final DeferredBlock<ButtonBlock> button;
 
+    /**
+     * To create a WoodSet, use {@link WoodSetRegistry}
+     */
+    @ApiStatus.Internal
     public WoodSet(String id, DeferredBlock<Block> planks, DeferredBlock<StairBlock> stairs, DeferredBlock<SlabBlock> slab,
                    DeferredBlock<FenceBlock> fence, DeferredBlock<FenceGateBlock> fenceGate, DeferredBlock<DoorBlock> door,
                    DeferredBlock<TrapDoorBlock> trapDoor, DeferredBlock<PressurePlateBlock> pressurePlate, DeferredBlock<ButtonBlock> button
