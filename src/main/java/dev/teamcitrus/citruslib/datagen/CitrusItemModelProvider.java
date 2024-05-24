@@ -21,7 +21,7 @@ public abstract class CitrusItemModelProvider extends ItemModelProvider {
     }
 
     public void toBlockCustomModel(Block block, String model) {
-        withExistingParent(BuiltInRegistries.BLOCK.getKey(block).getPath(), CitrusLib.modLoc("block/" + model));
+        withExistingParent(BuiltInRegistries.BLOCK.getKey(block).getPath(), modLoc("block/" + model));
     }
 
     public void spawnEggItem(Item item) {
