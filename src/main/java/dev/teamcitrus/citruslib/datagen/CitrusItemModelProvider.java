@@ -1,6 +1,7 @@
 package dev.teamcitrus.citruslib.datagen;
 
 import dev.teamcitrus.citruslib.CitrusLib;
+import dev.teamcitrus.citruslib.block.WoodSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -32,5 +33,17 @@ public abstract class CitrusItemModelProvider extends ItemModelProvider {
         getBuilder(item.toString())
                 .parent(new ModelFile.UncheckedModelFile("item/handheld"))
                 .texture("layer0", new ResourceLocation(BuiltInRegistries.ITEM.getKey(item).getNamespace(), "item/" + BuiltInRegistries.ITEM.getKey(item).getPath()));
+    }
+
+    public void generateWoodSetItems(WoodSet woodSet) {
+        toBlock(woodSet.getPlanks().get());
+        toBlock(woodSet.getStairs().get());
+        toBlock(woodSet.getSlab().get());
+        fenceInventory(woodSet.getID() + "_fence", modLoc("block/" + woodSet.getID() +"_planks"));
+        toBlock(woodSet.getFenceGate().get());
+        basicItem(woodSet.getDoor().asItem());
+        toBlockCustomModel(woodSet.getTrapDoor().get(),  woodSet.getID() + "_trapdoor_bottom");
+        toBlock(woodSet.getPressurePlate().get());
+        buttonInventory(woodSet.getID() + "_button", modLoc("block/" + woodSet.getID() + "_planks"));
     }
 }
