@@ -1,12 +1,16 @@
 package dev.teamcitrus.citruslib.block;
 
 import com.mojang.serialization.Codec;
-import dev.teamcitrus.citruslib.registry.WoodSetRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.neoforged.neoforge.registries.DeferredBlock;
-import org.jetbrains.annotations.ApiStatus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Collection;
 import java.util.Map;
@@ -26,11 +30,7 @@ public class WoodSet {
     private final DeferredBlock<PressurePlateBlock> pressurePlate;
     private final DeferredBlock<ButtonBlock> button;
 
-    /**
-     * To create a WoodSet, use {@link WoodSetRegistry}
-     */
-    @ApiStatus.Internal
-    public WoodSet(String id, DeferredBlock<Block> planks, DeferredBlock<StairBlock> stairs, DeferredBlock<SlabBlock> slab,
+    private WoodSet(String id, DeferredBlock<Block> planks, DeferredBlock<StairBlock> stairs, DeferredBlock<SlabBlock> slab,
                    DeferredBlock<FenceBlock> fence, DeferredBlock<FenceGateBlock> fenceGate, DeferredBlock<DoorBlock> door,
                    DeferredBlock<TrapDoorBlock> trapDoor, DeferredBlock<PressurePlateBlock> pressurePlate, DeferredBlock<ButtonBlock> button
     ) {
@@ -49,6 +49,35 @@ public class WoodSet {
     public static WoodSet register(WoodSet woodSet) {
         SET.put(woodSet.getID(), woodSet);
         return woodSet;
+    }
+
+    public static WoodSet registerSetBlocks(DeferredRegister.Blocks register, String woodName) {
+        BlockSetType blockType = new BlockSetType(woodName);
+        WoodType woodType = new WoodType(woodName, blockType);
+        DeferredBlock<Block> planks = register.register(woodName + "_planks", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
+        DeferredBlock<StairBlock> stairs = register.register(woodName + "_stairs", () -> new StairBlock(planks.get()::defaultBlockState, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_STAIRS)));
+        DeferredBlock<SlabBlock> slab = register.register(woodName + "_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)));
+        DeferredBlock<FenceBlock> fence = register.register(woodName + "_fence", () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE)));
+        DeferredBlock<FenceGateBlock> fenceGate = register.register(woodName + "_fence_gate", () -> new FenceGateBlock(woodType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE)));
+        DeferredBlock<DoorBlock> door = register.register(woodName + "_door", () -> new DoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR)));
+        DeferredBlock<TrapDoorBlock> trapdoor = register.register(woodName + "_trapdoor", () -> new TrapDoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR)));
+        DeferredBlock<PressurePlateBlock> pressure_plate = register.register(woodName + "_pressure_plate", () -> new PressurePlateBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)));
+        DeferredBlock<ButtonBlock> button = register.register(woodName + "_button", () -> new ButtonBlock(blockType, 30, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON)));
+        return register(new WoodSet(woodName, planks, stairs, slab, fence, fenceGate,
+                door, trapdoor, pressure_plate, button));
+    }
+
+    public static void registerSetItems(DeferredRegister.Items register, WoodSet woodSet) {
+        Item.Properties properties = new Item.Properties();
+        register.register(woodSet.getID() + "_planks", () -> new BlockItem(woodSet.getPlanks().get(), properties));
+        register.register(woodSet.getID() + "_stairs", () -> new BlockItem(woodSet.getStairs().get(), properties));
+        register.register(woodSet.getID() + "_slab", () -> new BlockItem(woodSet.getSlab().get(), properties));
+        register.register(woodSet.getID() + "_fence", () -> new BlockItem(woodSet.getFence().get(), properties));
+        register.register(woodSet.getID() + "_fence_gate", () -> new BlockItem(woodSet.getFenceGate().get(), properties));
+        register.register(woodSet.getID() + "_door", () -> new BlockItem(woodSet.getDoor().get(), properties));
+        register.register(woodSet.getID() + "_trapdoor", () -> new BlockItem(woodSet.getTrapDoor().get(), properties));
+        register.register(woodSet.getID() + "_pressure_plate", () -> new BlockItem(woodSet.getPressurePlate().get(), properties));
+        register.register(woodSet.getID() + "_button", () -> new BlockItem(woodSet.getButton().get(), properties));
     }
 
     public static Collection<WoodSet> values() {
