@@ -17,7 +17,7 @@ public class DatagenUtils {
      * A method grabbed from Lodestone Lib by Egshels and SammySemiColon to capitalise names and replace [regex] with a space
      * <a href="https://github.com/LodestarMC/Lodestone/blob/65c087683cc1ac2698c4365d1026b00979234443/src/main/java/team/lodestar/lodestone/helpers/DataHelper.java#L36C30-L36C30">...</a>
      */
-    private String toTitleCase(String givenString, String regex) {
+    public static String toTitleCase(String givenString, String regex) {
         String[] stringArray = givenString.split(regex);
         StringBuilder stringBuilder = new StringBuilder();
         for (String string : stringArray) {
