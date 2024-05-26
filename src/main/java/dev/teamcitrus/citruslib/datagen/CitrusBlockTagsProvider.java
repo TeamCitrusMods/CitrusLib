@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public abstract class CitrusBlockTagProvider extends BlockTagsProvider {
-    public CitrusBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+public abstract class CitrusBlockTagsProvider extends BlockTagsProvider {
+    public CitrusBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, modId, existingFileHelper);
     }
 

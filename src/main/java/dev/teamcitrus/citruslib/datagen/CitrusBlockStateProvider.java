@@ -6,8 +6,8 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public abstract class CitrusBlockModelProvider extends BlockStateProvider {
-    public CitrusBlockModelProvider(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
+public abstract class CitrusBlockStateProvider extends BlockStateProvider {
+    public CitrusBlockStateProvider(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
         super(output, modid, existingFileHelper);
     }
 
