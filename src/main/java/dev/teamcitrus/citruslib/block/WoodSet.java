@@ -46,7 +46,7 @@ public class WoodSet {
         this.button = button;
     }
 
-    public static WoodSet register(WoodSet woodSet) {
+    private static WoodSet register(WoodSet woodSet) {
         SET.put(woodSet.getID(), woodSet);
         return woodSet;
     }
