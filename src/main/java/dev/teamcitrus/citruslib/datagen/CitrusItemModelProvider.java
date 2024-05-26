@@ -34,13 +34,13 @@ public abstract class CitrusItemModelProvider extends ItemModelProvider {
                 .texture("layer0", new ResourceLocation(BuiltInRegistries.ITEM.getKey(item).getNamespace(), "item/" + BuiltInRegistries.ITEM.getKey(item).getPath()));
     }
 
-    public void generateWoodSetItems(WoodSet woodSet) {
+    public void generateSetModels(WoodSet woodSet) {
         toBlock(woodSet.getPlanks().get());
         toBlock(woodSet.getStairs().get());
         toBlock(woodSet.getSlab().get());
         fenceInventory(woodSet.getID() + "_fence", modLoc("block/" + woodSet.getID() +"_planks"));
         toBlock(woodSet.getFenceGate().get());
-        basicItem(woodSet.getDoor().get().asItem());
+        basicItem(woodSet.getDoor().asItem());
         toBlockCustomModel(woodSet.getTrapDoor().get(),  woodSet.getID() + "_trapdoor_bottom");
         toBlock(woodSet.getPressurePlate().get());
         buttonInventory(woodSet.getID() + "_button", modLoc("block/" + woodSet.getID() + "_planks"));

@@ -16,7 +16,7 @@ public abstract class CitrusBlockTagProvider extends BlockTagsProvider {
         super(output, lookupProvider, modId, existingFileHelper);
     }
 
-    public void generateWoodTags(WoodSet woodSet) {
+    public void generateSetTags(WoodSet woodSet) {
         tag(BlockTags.PLANKS).add(woodSet.getPlanks().get());
         tag(BlockTags.STAIRS).add(woodSet.getStairs().get());
         tag(BlockTags.WOODEN_STAIRS).add(woodSet.getStairs().get());
