@@ -1,6 +1,5 @@
 package dev.teamcitrus.citruslib.datagen;
 
-import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.block.WoodSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
