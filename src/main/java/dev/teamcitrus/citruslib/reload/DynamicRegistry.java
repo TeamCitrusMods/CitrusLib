@@ -12,7 +12,7 @@ import com.mojang.serialization.JsonOps;
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.codec.CodecMap;
 import dev.teamcitrus.citruslib.codec.CodecProvider;
-import dev.teamcitrus.citruslib.util.JsonUtil;
+import dev.teamcitrus.citruslib.util.JsonUtils;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.RegistryOps;
@@ -71,7 +71,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
         var ops = ConditionalOps.create(RegistryOps.create(JsonOps.INSTANCE, this.registryAccess), this.conditionContext);
         objects.forEach((key, ele) -> {
             try {
-                if (JsonUtil.checkAndLogEmpty(ele, key, this.path, this.logger) && JsonUtil.checkConditions(ele, key, this.path, this.logger, ops)) {
+                if (JsonUtils.checkAndLogEmpty(ele, key, this.path, this.logger) && JsonUtils.checkConditions(ele, key, this.path, this.logger, ops)) {
                     JsonObject obj = ele.getAsJsonObject();
                     R deserialized = this.codecs.decode(JsonOps.INSTANCE, obj).getOrThrow(false, this::logCodecError).getFirst();
                     Preconditions.checkNotNull(deserialized.getCodec(), "A " + this.path + " with id " + key + " is not declaring a codec.");
