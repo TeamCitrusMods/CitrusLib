@@ -3,8 +3,6 @@ package dev.teamcitrus.citruslib.block;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -68,16 +66,15 @@ public class WoodSet {
     }
 
     public static void registerSetItems(DeferredRegister.Items register, WoodSet woodSet) {
-        Item.Properties properties = new Item.Properties();
-        register.register(woodSet.getID() + "_planks", () -> new BlockItem(woodSet.getPlanks().get(), properties));
-        register.register(woodSet.getID() + "_stairs", () -> new BlockItem(woodSet.getStairs().get(), properties));
-        register.register(woodSet.getID() + "_slab", () -> new BlockItem(woodSet.getSlab().get(), properties));
-        register.register(woodSet.getID() + "_fence", () -> new BlockItem(woodSet.getFence().get(), properties));
-        register.register(woodSet.getID() + "_fence_gate", () -> new BlockItem(woodSet.getFenceGate().get(), properties));
-        register.register(woodSet.getID() + "_door", () -> new BlockItem(woodSet.getDoor().get(), properties));
-        register.register(woodSet.getID() + "_trapdoor", () -> new BlockItem(woodSet.getTrapDoor().get(), properties));
-        register.register(woodSet.getID() + "_pressure_plate", () -> new BlockItem(woodSet.getPressurePlate().get(), properties));
-        register.register(woodSet.getID() + "_button", () -> new BlockItem(woodSet.getButton().get(), properties));
+        register.registerSimpleBlockItem(woodSet.getPlanks());
+        register.registerSimpleBlockItem(woodSet.getStairs());
+        register.registerSimpleBlockItem(woodSet.getSlab());
+        register.registerSimpleBlockItem(woodSet.getFence());
+        register.registerSimpleBlockItem(woodSet.getFenceGate());
+        register.registerSimpleBlockItem(woodSet.getDoor());
+        register.registerSimpleBlockItem(woodSet.getTrapDoor());
+        register.registerSimpleBlockItem(woodSet.getPressurePlate());
+        register.registerSimpleBlockItem(woodSet.getButton());
     }
 
     public static Collection<WoodSet> values() {
