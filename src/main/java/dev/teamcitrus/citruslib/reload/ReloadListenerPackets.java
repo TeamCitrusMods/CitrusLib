@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 @ApiStatus.Internal
 public class ReloadListenerPackets {
-    public static record Start(String path) implements CustomPacketPayload {
+    public record Start(String path) implements CustomPacketPayload {
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_start");
 
         @Override
@@ -64,7 +64,7 @@ public class ReloadListenerPackets {
         }
     }
 
-    public static record Content<V extends CodecProvider<? super V>>(String path, ResourceLocation key, V item) implements CustomPacketPayload {
+    public record Content<V extends CodecProvider<? super V>>(String path, ResourceLocation key, V item) implements CustomPacketPayload {
 
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_content");
 
@@ -122,7 +122,7 @@ public class ReloadListenerPackets {
         }
     }
 
-    public static record End(String path) implements CustomPacketPayload {
+    public record End(String path) implements CustomPacketPayload {
 
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_end");
 

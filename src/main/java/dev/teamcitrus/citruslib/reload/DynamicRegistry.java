@@ -245,7 +245,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
         }
 
         static void endSync(String path) {
-            if (ServerLifecycleHooks.getCurrentServer() != null) return; // Do not propgate received changed on the host of a singleplayer world, as they may not be the full data.
+            if (ServerLifecycleHooks.getCurrentServer() != null) return;
             ifPresent(path, DynamicRegistry::pushStagedToLive);
         }
 

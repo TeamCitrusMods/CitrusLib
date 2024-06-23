@@ -11,7 +11,7 @@ public class CommandUtils {
     }
 
     public static Component withClickableCommand(ChatFormatting color, String command, String tooltip, Object... formatting) {
-        return Component.translatable(command, formatting).withStyle((p_241055_1_) -> p_241055_1_.withColor(color)
+        return Component.translatable(command, formatting).withStyle((style) -> style.withColor(color)
                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command + StringUtils.join(' ', formatting)))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(tooltip))));
     }
