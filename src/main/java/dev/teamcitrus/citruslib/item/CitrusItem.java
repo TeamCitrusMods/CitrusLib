@@ -15,7 +15,14 @@ public class CitrusItem extends Item {
         return false;
     }
 
+    public boolean isDevItem() {
+        return false;
+    }
+
     public Properties defaultProperties() {
+        if (isDevItem()) {
+            return new Properties().requiredFeatures(CitrusFeatureFlags.DEV);
+        }
         return new Properties();
     }
 }
