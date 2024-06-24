@@ -3,7 +3,6 @@ package dev.teamcitrus.citruslib.codec;
 import com.google.common.collect.BiMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.*;
@@ -56,13 +55,13 @@ public class CitrusCodecs {
      * Creates an enum codec using the lowercase name of the enum values as the keys.
      */
     public static <E extends Enum<E>> Codec<E> enumCodec(Class<E> clazz) {
-        return ExtraCodecs.stringResolverCodec(e -> e.name().toLowerCase(Locale.ROOT), name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)));
+        return Codec.stringResolver(e -> e.name().toLowerCase(Locale.ROOT), name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)));
     }
 
     /**
      * Creates a string resolver codec for a type implementing {@link StringRepresentable}.
      */
     public static <T extends StringRepresentable> Codec<T> stringResolver(Function<String, T> decoder) {
-        return ExtraCodecs.stringResolverCodec(StringRepresentable::getSerializedName, decoder);
+        return Codec.stringResolver(StringRepresentable::getSerializedName, decoder);
     }
 }

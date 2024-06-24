@@ -2,7 +2,6 @@ package dev.teamcitrus.citruslib.block;
 
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 public class WoodSet {
     private static final Map<String, WoodSet> SET = new Object2ObjectArrayMap<>();
-    public static final Codec<WoodSet> CODEC = ExtraCodecs.stringResolverCodec(WoodSet::getID, SET::get);
+    public static final Codec<WoodSet> CODEC = Codec.stringResolver(WoodSet::getID, SET::get);
 
     private final String id;
     private final DeferredBlock<Block> planks;
@@ -53,7 +52,7 @@ public class WoodSet {
         BlockSetType blockType = new BlockSetType(woodName);
         WoodType woodType = new WoodType(woodName, blockType);
         DeferredBlock<Block> planks = register.register(woodName + "_planks", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
-        DeferredBlock<StairBlock> stairs = register.register(woodName + "_stairs", () -> new StairBlock(planks.get()::defaultBlockState, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_STAIRS)));
+        DeferredBlock<StairBlock> stairs = register.register(woodName + "_stairs", () -> new StairBlock(planks.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_STAIRS)));
         DeferredBlock<SlabBlock> slab = register.register(woodName + "_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)));
         DeferredBlock<FenceBlock> fence = register.register(woodName + "_fence", () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE)));
         DeferredBlock<FenceGateBlock> fenceGate = register.register(woodName + "_fence_gate", () -> new FenceGateBlock(woodType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE)));

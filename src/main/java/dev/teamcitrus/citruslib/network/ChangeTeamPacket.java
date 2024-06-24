@@ -2,8 +2,11 @@ package dev.teamcitrus.citruslib.network;
 
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.team.CitrusTeamManagerClient;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ChangeTeamPacket implements CustomPacketPayload {
-    public static final ResourceLocation ID = CitrusLib.modLoc("change_team");
+    public static final Type<ChangeTeamPacket> TYPE = new Type<>(CitrusLib.modLoc("change_team"));
     private final UUID player;
     private final UUID oldTeam;
     private final UUID newTeam;
@@ -29,6 +32,12 @@ public class ChangeTeamPacket implements CustomPacketPayload {
         this(buf.readUUID(), buf.readUUID(), buf.readUUID());
     }
 
+    //We need StreamCodecs now for some reason
+    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeTeamPacket> STREAM_CODEC =
+            StreamCodec.composite(
+                    UUIDUtil.STREAM_CODEC
+            )
+
     @Override
     public void write(FriendlyByteBuf friendlyByteBuf) {
         friendlyByteBuf.writeUUID(player);
@@ -37,8 +46,8 @@ public class ChangeTeamPacket implements CustomPacketPayload {
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static class Provider implements PayloadProvider<ChangeTeamPacket, PlayPayloadContext> {

@@ -68,7 +68,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
     @Override
     protected final void apply(Map<ResourceLocation, JsonElement> objects, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
         this.beginReload();
-        var ops = ConditionalOps.create(RegistryOps.create(JsonOps.INSTANCE, this.registryAccess), this.conditionContext);
+        var ops = makeConditionalOps();
         objects.forEach((key, ele) -> {
             try {
                 if (JsonUtils.checkAndLogEmpty(ele, key, this.path, this.logger) && JsonUtils.checkConditions(ele, key, this.path, this.logger, ops)) {
