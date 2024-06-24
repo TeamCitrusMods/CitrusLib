@@ -3,6 +3,7 @@ package dev.teamcitrus.citruslib.team;
 import dev.teamcitrus.citruslib.event.TeamChangedOwnerEvent;
 import dev.teamcitrus.citruslib.network.SyncTeamDataPacket;
 import joptsimple.internal.Strings;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.UnknownNullability;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -91,7 +93,7 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
 
     public void syncToPlayer(ServerPlayer player) {
         if (player != null) {
-            PacketDistributor.PLAYER.with(player).send(new SyncTeamDataPacket(serializeNBT()));
+            PacketDistributor.sendToPlayer(player, new SyncTeamDataPacket(serializeNBT()));
         }
     }
 
@@ -102,7 +104,7 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
                     .map(world::getPlayerByUUID)
                     .filter(player -> player instanceof ServerPlayer)
                     .map(player -> (ServerPlayer)player)
-                    .forEach(player -> PacketDistributor.PLAYER.with(player).send(new SyncTeamDataPacket(serializeNBT())));
+                    .forEach(player -> PacketDistributor.sendToPlayer(player, new SyncTeamDataPacket(serializeNBT())));
         }
     }
 
@@ -121,7 +123,7 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag compound = new CompoundTag();
         compound.putString("UUID", teamUUID.toString());
         compound.putString("Name", name == null ? teamUUID.toString() : name);
@@ -141,7 +143,7 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag compound) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag compound) {
         teamUUID = UUID.fromString(compound.getString("UUID"));
         name = compound.contains("Name") ? compound.getString("Name") : teamUUID.toString();
         data = compound.getCompound("Data");

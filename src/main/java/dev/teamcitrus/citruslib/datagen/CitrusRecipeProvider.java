@@ -1,13 +1,16 @@
 package dev.teamcitrus.citruslib.datagen;
 
 import dev.teamcitrus.citruslib.block.WoodSet;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 
+import java.util.concurrent.CompletableFuture;
+
 public abstract class CitrusRecipeProvider extends RecipeProvider {
-    public CitrusRecipeProvider(PackOutput pOutput) {
-        super(pOutput);
+    public CitrusRecipeProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
+        super(pOutput, pRegistries);
     }
 
     public void generateWoodSetRecipes(RecipeOutput recipeOutput, WoodSet woodSet) {

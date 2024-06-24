@@ -31,7 +31,7 @@ public abstract class CitrusItemModelProvider extends ItemModelProvider {
     public void handheldItem(Item item) {
         getBuilder(item.toString())
                 .parent(new ModelFile.UncheckedModelFile("item/handheld"))
-                .texture("layer0", new ResourceLocation(BuiltInRegistries.ITEM.getKey(item).getNamespace(), "item/" + BuiltInRegistries.ITEM.getKey(item).getPath()));
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(BuiltInRegistries.ITEM.getKey(item).getNamespace(), "item/" + BuiltInRegistries.ITEM.getKey(item).getPath()));
     }
 
     public void generateSetModels(WoodSet woodSet) {

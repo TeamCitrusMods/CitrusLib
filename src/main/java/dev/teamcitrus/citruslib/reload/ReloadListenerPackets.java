@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.ServerPayloadContext;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -26,13 +27,8 @@ public class ReloadListenerPackets {
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_start");
 
         @Override
-        public ResourceLocation id() {
-            return ID;
-        }
-
-        @Override
-        public void write(FriendlyByteBuf buf) {
-            buf.writeUtf(this.path, 50);
+        public Type<? extends CustomPacketPayload> type() {
+            return new Type<>(ID);
         }
 
         public static class Provider implements PayloadProvider<Start, PlayPayloadContext> {
@@ -67,11 +63,6 @@ public class ReloadListenerPackets {
     public record Content<V extends CodecProvider<? super V>>(String path, ResourceLocation key, V item) implements CustomPacketPayload {
 
         public static final ResourceLocation ID = CitrusLib.modLoc("reload_sync_content");
-
-        @Override
-        public ResourceLocation id() {
-            return ID;
-        }
 
         @Override
         public void write(FriendlyByteBuf buf) {

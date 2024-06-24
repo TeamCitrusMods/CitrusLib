@@ -34,6 +34,6 @@ public class CitrusLib {
     }
 
     public static ResourceLocation modLoc(String id) {
-        return new ResourceLocation(MODID, id);
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
     }
 }
