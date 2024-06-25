@@ -2,6 +2,7 @@ package dev.teamcitrus.citruslib.network;
 
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +17,9 @@ import java.util.Optional;
  * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 public interface PayloadProvider<T extends CustomPacketPayload, C extends IPayloadContext> {
-    ResourceLocation id();
+    CustomPacketPayload.Type<?> type();
+
+    StreamCodec<?, ?> codec();
 
     T read(FriendlyByteBuf buf);
 

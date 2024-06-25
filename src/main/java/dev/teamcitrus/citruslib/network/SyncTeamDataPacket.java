@@ -6,14 +6,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 import java.util.Optional;
 
 public class SyncTeamDataPacket extends SyncCompoundTagPacket {
-    public static final ResourceLocation ID = CitrusLib.modLoc("sync_team_data");
+    public static final Type<SyncTeamDataPacket> TYPE = new Type<>(CitrusLib.modLoc("sync_team_data"));
 
     public SyncTeamDataPacket(CompoundTag tag) {
         super(tag);
@@ -24,15 +24,15 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static class Provider implements PayloadProvider<SyncTeamDataPacket, PlayPayloadContext> {
+    public static class Provider implements PayloadProvider<SyncTeamDataPacket, IPayloadContext> {
 
         @Override
-        public ResourceLocation id() {
-            return ID;
+        public Type<SyncTeamDataPacket> id() {
+            return TYPE;
         }
 
         @Override
@@ -41,7 +41,7 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
         }
 
         @Override
-        public void handle(SyncTeamDataPacket msg, PlayPayloadContext ctx) {
+        public void handle(SyncTeamDataPacket msg, IPayloadContext ctx) {
             PayloadHelper.handle(() -> CitrusTeamManagerClient.setInstance(msg.tag), ctx);
         }
 

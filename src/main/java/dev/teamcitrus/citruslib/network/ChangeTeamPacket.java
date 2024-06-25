@@ -9,8 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +31,26 @@ public class ChangeTeamPacket implements CustomPacketPayload {
         this(buf.readUUID(), buf.readUUID(), buf.readUUID());
     }
 
-    //We need StreamCodecs now for some reason
-    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeTeamPacket> STREAM_CODEC =
-            StreamCodec.composite(
-                    UUIDUtil.STREAM_CODEC
-            )
+    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeTeamPacket> STREAM_CODEC = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC,
+            ChangeTeamPacket::player,
+            UUIDUtil.STREAM_CODEC,
+            ChangeTeamPacket::oldTeam,
+            UUIDUtil.STREAM_CODEC,
+            ChangeTeamPacket::newTeam,
+            ChangeTeamPacket::new
+    );
 
-    @Override
-    public void write(FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeUUID(player);
-        friendlyByteBuf.writeUUID(oldTeam);
-        friendlyByteBuf.writeUUID(newTeam);
+    public UUID player() {
+        return player;
+    }
+
+    public UUID oldTeam() {
+        return oldTeam;
+    }
+
+    public UUID newTeam() {
+        return newTeam;
     }
 
     @Override
@@ -50,10 +58,15 @@ public class ChangeTeamPacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static class Provider implements PayloadProvider<ChangeTeamPacket, PlayPayloadContext> {
+    public static class Provider implements PayloadProvider<ChangeTeamPacket, IPayloadContext> {
         @Override
-        public ResourceLocation id() {
-            return ID;
+        public Type<ChangeTeamPacket> type() {
+            return TYPE;
+        }
+
+        @Override
+        public StreamCodec<?, ?> codec() {
+            return STREAM_CODEC;
         }
 
         @Override
@@ -62,7 +75,7 @@ public class ChangeTeamPacket implements CustomPacketPayload {
         }
 
         @Override
-        public void handle(ChangeTeamPacket msg, PlayPayloadContext ctx) {
+        public void handle(ChangeTeamPacket msg, IPayloadContext ctx) {
             PayloadHelper.handle(() -> CitrusTeamManagerClient.changeTeam(msg.player, msg.oldTeam, msg.newTeam), ctx);
         }
 
