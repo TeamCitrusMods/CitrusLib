@@ -4,7 +4,9 @@ import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.team.CitrusTeamManagerClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.ConnectionProtocol;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -19,9 +21,11 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
         super(tag);
     }
 
-    public SyncTeamDataPacket(FriendlyByteBuf buf) {
-        super(buf);
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncTeamDataPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.COMPOUND_TAG,
+            SyncTeamDataPacket::tag,
+            SyncTeamDataPacket::new
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -29,15 +33,14 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
     }
 
     public static class Provider implements PayloadProvider<SyncTeamDataPacket, IPayloadContext> {
-
         @Override
-        public Type<SyncTeamDataPacket> id() {
+        public Type<SyncTeamDataPacket> type() {
             return TYPE;
         }
 
         @Override
-        public SyncTeamDataPacket read(FriendlyByteBuf buf) {
-            return new SyncTeamDataPacket(buf);
+        public StreamCodec<?, ?> codec() {
+            return STREAM_CODEC;
         }
 
         @Override

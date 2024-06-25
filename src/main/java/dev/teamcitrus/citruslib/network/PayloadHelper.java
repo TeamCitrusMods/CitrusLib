@@ -7,11 +7,9 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.HashMap;
@@ -32,7 +30,7 @@ public class PayloadHelper {
         Preconditions.checkNotNull(prov);
         synchronized (ALL_PROVIDERS) {
             if (locked) throw new UnsupportedOperationException("Attempted to register a payload provider after registration has finished.");
-            if (ALL_PROVIDERS.containsKey(prov.type().id())) throw new UnsupportedOperationException("Attempted to register payload provider with duplicate ID: " + prov.id());
+            if (ALL_PROVIDERS.containsKey(prov.type().id())) throw new UnsupportedOperationException("Attempted to register payload provider with duplicate ID: " + prov.type().id());
             ALL_PROVIDERS.put(prov.type().id(), prov);
         }
     }
@@ -70,7 +68,7 @@ public class PayloadHelper {
             this.provider = provider;
             this.flow = provider.getFlow();
             this.protocols = provider.getSupportedProtocols();
-            Preconditions.checkArgument(!this.protocols.isEmpty(), "The payload registration for " + provider.id() + " must specify at least one valid protocol.");
+            Preconditions.checkArgument(!this.protocols.isEmpty(), "The payload registration for " + provider.type().id() + " must specify at least one valid protocol.");
         }
 
         @Override
