@@ -36,7 +36,7 @@ public class DynamicHolder<T> implements Supplier<T> {
     }
 
     public Optional<T> getOptional() {
-        return this.isBound() ? Optional.of(this.value()) : Optional.empty();
+        return this.isBound() ? Optional.of(this.get()) : Optional.empty();
     }
 
     public ResourceLocation getId() {
@@ -66,11 +66,6 @@ public class DynamicHolder<T> implements Supplier<T> {
 
     void unbind() {
         this.value = null;
-    }
-
-    @Deprecated(forRemoval = true)
-    public T value() {
-        return this.get();
     }
 
 }
