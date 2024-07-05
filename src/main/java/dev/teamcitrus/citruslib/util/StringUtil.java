@@ -1,10 +1,11 @@
 package dev.teamcitrus.citruslib.util;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.stream.Collectors;
 
-public class StringUtils {
+public class StringUtil {
     public static String toTitleCase(String givenString, String regex) {
         String[] stringArray = givenString.split(regex);
         StringBuilder stringBuilder = new StringBuilder();
@@ -15,6 +16,6 @@ public class StringUtils {
     }
 
     public static String join(char character, Object... vars) {
-        return org.apache.commons.lang3.StringUtils.join(Lists.newArrayList(vars).stream().map(Object::toString).collect(Collectors.toList()), character);
+        return StringUtils.join(Lists.newArrayList(vars).stream().map(Object::toString).collect(Collectors.toList()), character);
     }
 }

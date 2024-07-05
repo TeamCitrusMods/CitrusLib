@@ -1,5 +1,6 @@
 package dev.teamcitrus.citruslib;
 
+import dev.teamcitrus.citruslib.internal.registry.PermissionRegistry;
 import dev.teamcitrus.citruslib.network.ChangeTeamPacket;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
 import dev.teamcitrus.citruslib.network.SyncTeamDataPacket;
@@ -21,6 +22,7 @@ public class CitrusLib {
     public CitrusLib(IEventBus bus) {
         bus.register(this);
         bus.register(new PayloadHelper());
+        PermissionRegistry.init();
     }
 
     @SubscribeEvent

@@ -9,6 +9,7 @@ import dev.teamcitrus.citruslib.network.SyncTeamMembersPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +23,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = CitrusLib.MODID)
@@ -88,8 +86,10 @@ public class CitrusTeamManager extends SavedData {
         }
 
         CitrusTeam newTeam = teams.get(newUUID);
-        newTeam.members().add(player);
-        teamsByName.remove(newTeam.getName(), newTeam); //Remove the old name
+        newTeam.members().put(player, new ArrayList<>());
+        if (oldTeam != null && oldTeam.members().isEmpty()) {
+            teamsByName.remove(oldTeam.getName(), oldTeam); //Remove the old name
+        }
         if (player.equals(newUUID))
             newTeam.setName(UsernameCache.getLastKnownUsername(player));
         function.accept(newTeam);
@@ -108,7 +108,7 @@ public class CitrusTeamManager extends SavedData {
         return teams.get(team).getData();
     }
 
-    public Collection<UUID> getTeamMembers(UUID team) {
+    public Map<UUID, List<ResourceLocation>> getTeamMembers(UUID team) {
         return teams.get(team).members();
     }
 
@@ -161,7 +161,10 @@ public class CitrusTeamManager extends SavedData {
             CitrusTeam team = new CitrusTeam(tag);
             teamData.teams.put(team.getID(), team);
             teamData.teamsByName.put(team.getName(), team);
-            team.members().forEach(member -> teamData.memberOf.put(member, team.getID())); //Add the quick reference for members
+            //team.members().forEach(member -> teamData.memberOf.put(member, team.getID())); //Add the quick reference for members
+            team.members().forEach((member, permissions) -> {
+                teamData.memberOf.put(member, team.getID());
+            });
         }
         return teamData;
     }

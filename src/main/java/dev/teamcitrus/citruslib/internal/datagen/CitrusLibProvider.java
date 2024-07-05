@@ -2,7 +2,7 @@ package dev.teamcitrus.citruslib.internal.datagen;
 
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.internal.datagen.provider.lang.EnUsProvider;
-import dev.teamcitrus.citruslib.util.DatagenUtils;
+import dev.teamcitrus.citruslib.util.DatagenUtil;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,6 +17,6 @@ public class CitrusLibProvider {
         PackOutput output = gen.getPackOutput();
 
         gen.addProvider(event.includeClient(), new EnUsProvider(output));
-        gen.addProvider(true, DatagenUtils.makeMetadataFile(output, CitrusLib.MODID));
+        gen.addProvider(true, DatagenUtil.makeMetadataFile(output, CitrusLib.MODID));
     }
 }

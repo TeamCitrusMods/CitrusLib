@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
-public class DatagenUtils {
+public class DatagenUtil {
     public static PackMetadataGenerator makeMetadataFile(PackOutput packOutput, String modID) {
         return new PackMetadataGenerator(packOutput).add(PackMetadataSection.TYPE, new PackMetadataSection(
                 Component.literal("Resources for " + StringUtils.capitalize(modID)),

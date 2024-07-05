@@ -3,7 +3,7 @@ package dev.teamcitrus.citruslib.internal.command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.teamcitrus.citruslib.team.CitrusTeam;
 import dev.teamcitrus.citruslib.team.CitrusTeamManager;
-import dev.teamcitrus.citruslib.util.CommandUtils;
+import dev.teamcitrus.citruslib.util.CommandUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -34,7 +34,7 @@ public class InviteCommand {
                             CitrusTeamManager.get(ctx.getSource().getLevel()).getTeam(ctx.getSource().getPlayerOrException().getUUID()).invite(ctx.getSource().getLevel(), player.getUUID());
                             ctx.getSource().sendSuccess(() -> Component.translatable("command.citruslib.team.invite.success", player.getName().getString()), false);
                             player.createCommandSourceStack().sendSuccess(() -> Component.translatable("command.citruslib.team.invite.message",
-                                    current.getName(), CommandUtils.withClickableCommand(ChatFormatting.GREEN, "/citruslib team join " + current.getName(), "command.citruslib.team.invite.tooltip")), false);
+                                    current.getName(), CommandUtil.withClickableCommand(ChatFormatting.GREEN, "/citruslib team join " + current.getName(), "command.citruslib.team.invite.tooltip")), false);
                             return 1;
                         }));
     }
