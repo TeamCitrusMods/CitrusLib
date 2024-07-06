@@ -1,7 +1,7 @@
 package dev.teamcitrus.citruslib.team;
 
 import dev.teamcitrus.citruslib.event.TeamChangedOwnerEvent;
-import dev.teamcitrus.citruslib.network.SyncTeamDataPayload;
+import dev.teamcitrus.citruslib.payload.SyncTeamDataPayload;
 import joptsimple.internal.Strings;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

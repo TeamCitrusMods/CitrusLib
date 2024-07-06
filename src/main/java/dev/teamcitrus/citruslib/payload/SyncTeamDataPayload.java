@@ -1,6 +1,7 @@
-package dev.teamcitrus.citruslib.network;
+package dev.teamcitrus.citruslib.payload;
 
 import dev.teamcitrus.citruslib.CitrusLib;
+import dev.teamcitrus.citruslib.network.PayloadProvider;
 import dev.teamcitrus.citruslib.team.CitrusTeamManagerClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.ConnectionProtocol;
