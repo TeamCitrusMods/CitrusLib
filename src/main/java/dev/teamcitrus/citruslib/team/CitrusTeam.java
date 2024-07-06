@@ -1,7 +1,7 @@
 package dev.teamcitrus.citruslib.team;
 
 import dev.teamcitrus.citruslib.event.TeamChangedOwnerEvent;
-import dev.teamcitrus.citruslib.network.SyncTeamDataPacket;
+import dev.teamcitrus.citruslib.network.SyncTeamDataPayload;
 import joptsimple.internal.Strings;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +9,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -46,7 +47,6 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
         invited.add(uuid);
     }
 
-
     public void clearInvite(UUID playerID) {
         invited.remove(playerID);
     }
@@ -65,8 +65,8 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
         return this;
     }
 
-    public CitrusTeam(CompoundTag data) {
-        this.deserializeNBT(data);
+    public CitrusTeam(CompoundTag data, HolderLookup.Provider provider) {
+        this.deserializeNBT(provider, data);
     }
 
     public Set<UUID> members() {
@@ -86,13 +86,13 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
         return data;
     }
 
-    public SyncTeamDataPacket getSyncPacket() {
-        return new SyncTeamDataPacket(serializeNBT());
+    public SyncTeamDataPayload getSyncPacket(Level level) {
+        return new SyncTeamDataPayload(serializeNBT(level.registryAccess()));
     }
 
     public void syncToPlayer(ServerPlayer player) {
         if (player != null) {
-            PacketDistributor.sendToPlayer(player, new SyncTeamDataPacket(serializeNBT()));
+            PacketDistributor.sendToPlayer(player, new SyncTeamDataPayload(serializeNBT(player.level().registryAccess())));
         }
     }
 
@@ -103,7 +103,7 @@ public class CitrusTeam implements INBTSerializable<CompoundTag> {
                     .map(world::getPlayerByUUID)
                     .filter(player -> player instanceof ServerPlayer)
                     .map(player -> (ServerPlayer)player)
-                    .forEach(player -> PacketDistributor.sendToPlayer(player, new SyncTeamDataPacket(serializeNBT())));
+                    .forEach(player -> PacketDistributor.sendToPlayer(player, new SyncTeamDataPayload(serializeNBT(world.registryAccess()))));
         }
     }
 

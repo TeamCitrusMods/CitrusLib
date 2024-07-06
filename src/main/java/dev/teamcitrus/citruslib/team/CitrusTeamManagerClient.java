@@ -3,6 +3,7 @@ package dev.teamcitrus.citruslib.team;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,8 +17,8 @@ public class CitrusTeamManagerClient {
         return INSTANCE;
     }
 
-    public static void setInstance(CompoundTag data) {
-        INSTANCE = new CitrusTeam(data);
+    public static void setInstance(CompoundTag data, Level level) {
+        INSTANCE = new CitrusTeam(data, level.registryAccess());
         INSTANCE.setClient();
     }
 

@@ -1,36 +1,76 @@
 package dev.teamcitrus.citruslib.network;
 
 import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.HandlerThread;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Taken from Placebo with consent of Shadows
- * @author Shadows of Fire
- * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
+ * A Payload Provider encapsulates the default components that make up a custom payload packet registration.
+ *
+ * @param <T> The type of the payload.
+ * @param <C> The type of the payload context.
  */
-public interface PayloadProvider<T extends CustomPacketPayload, C extends IPayloadContext> {
-    CustomPacketPayload.Type<?> type();
+public interface PayloadProvider<T extends CustomPacketPayload> {
 
-    StreamCodec<?, ?> codec();
+    /**
+     * @return The type of the payload being registered. Must match {@link CustomPacketPayload#type()}.
+     */
+    CustomPacketPayload.Type<T> getType();
 
-    void handle(T msg, C ctx);
+    /**
+     * @return The {@link StreamCodec} responsible for encoding/decoding the payload.
+     */
+    StreamCodec<? super RegistryFriendlyByteBuf, T> getCodec();
 
+    /**
+     * Handle the payload.
+     * See {@link PayloadHelper#handlePacket(Supplier, Supplier)}
+     *
+     * @param msg The messsage to handle.
+     * @param ctx Relevant network context information.
+     */
+    void handle(T msg, IPayloadContext ctx);
+
+    /**
+     * Gets a list of all supported connection protocols. This method may allocated a new list, as it is only called once.
+     *
+     * @apiNote Currently, only {@link ConnectionProtocol#CONFIGURATION} and {@link ConnectionProtocol#PLAY} are supported.
+     */
     List<ConnectionProtocol> getSupportedProtocols();
 
+    /**
+     * Gets the network direction in which this payload may be sent.<br>
+     * {@link Optional#empty()} means both directions are supported.
+     *
+     * @return The optional containing the valid network direction, or empty if both directions are supported.
+     */
     Optional<PacketFlow> getFlow();
 
-    default String getVersion() {
-        return "1";
-    }
+    /**
+     * The version of this payload. If a version is provided, the versions must match on both sides, or the connection will fail.
+     * <p>
+     * You should always change the payload's version if the serialization changes.
+     */
+    String getVersion();
 
+    /**
+     * {@return true if this payload is optional, and does not need to be present on the other side}
+     */
     default boolean isOptional() {
-        return true;
+        return false;
     }
 
+    /**
+     * @return The thread that will be used to execute the {@link #handle(CustomPacketPayload, IPayloadContext)} method.
+     */
+    default HandlerThread getHandlerThread() {
+        return HandlerThread.MAIN;
+    }
 }

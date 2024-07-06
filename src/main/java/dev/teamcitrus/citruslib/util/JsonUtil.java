@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  * @author Shadows of Fire
  * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
-public class JsonUtils {
+public class JsonUtil {
     public static boolean checkAndLogEmpty(JsonElement e, ResourceLocation id, String type, Logger logger) {
         String s = e.toString();
         if (s.isEmpty() || "{}".equals(s)) {

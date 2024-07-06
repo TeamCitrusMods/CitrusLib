@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.teamcitrus.citruslib.team.CitrusTeam;
 import dev.teamcitrus.citruslib.team.CitrusTeamManager;
-import dev.teamcitrus.citruslib.util.CommandUtils;
+import dev.teamcitrus.citruslib.util.CommandUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ public class JoinTeamCommand {
                             //If the player is in a team already, they cannot join one
                             if (!current.getID().equals(playerID)) {
                                 source.sendFailure(Component.translatable("command.citruslib.team.join.must_leave",
-                                        CommandUtils.withClickableCommand("/citruslib team leave", "command.citruslib.team.join.must_leave.tooltip")));
+                                        CommandUtil.withClickableCommand("/citruslib team leave", "command.citruslib.team.join.must_leave.tooltip")));
                                 return 0;
                             }
 

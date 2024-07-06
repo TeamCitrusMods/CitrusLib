@@ -3,10 +3,18 @@ package dev.teamcitrus.citruslib.codec;
 import com.mojang.serialization.Codec;
 
 /**
- * Taken from Placebo with consent of Shadows
- * @author Shadows of Fire
- * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
+ * A Codec Provider is an object which supplies the codec that was used to create it.
+ * <p>
+ * Primarily for use by elements in {@link MapBackedCodec} and {@link CodecMap}.
+ *
+ * @param <R> The registry (base) type of the object
  */
 public interface CodecProvider<R> {
+
+    /**
+     * @return The codec used to de/serialize this object to/from disk.
+     * @implNote The return value of this method must be invariant.
+     */
     Codec<? extends R> getCodec();
+
 }

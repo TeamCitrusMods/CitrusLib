@@ -4,9 +4,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.event.TeamChangedEvent;
-import dev.teamcitrus.citruslib.network.ChangeTeamPacket;
-import dev.teamcitrus.citruslib.network.SyncTeamMembersPacket;
+import dev.teamcitrus.citruslib.network.ChangeTeamPayload;
+import dev.teamcitrus.citruslib.network.SyncTeamMembersPayload;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber(modid = CitrusLib.MODID)
+@EventBusSubscriber(modid = CitrusLib.MODID)
 public class CitrusTeamManager extends SavedData {
     private static final String DATA_NAME = "citrus_teams";
     private final Map<UUID, UUID> memberOf = new HashMap<>(); //Player ID > Team ID
@@ -51,13 +52,7 @@ public class CitrusTeamManager extends SavedData {
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             CitrusTeamManager teams = get((ServerLevel) player.level());
-            //PenguinNetwork.sendToClient(player,
-                   // getTeamForPlayer(player).getSyncPacket(),
-                    //new SyncPlayerTagPacket("PenguinStatuses", player),
-                    //new SyncTeamMembersPacket(teams.memberOf)
-                    //new SyncPlayerTagPacket("Notes", player) {
-                    //);
-            PacketDistributor.PLAYER.with(player).send(getTeamForPlayer(player).getSyncPacket(), new SyncTeamMembersPacket(teams.memberOf));
+            PacketDistributor.sendToPlayer(player, getTeamForPlayer(player).getSyncPacket(event.getEntity().level()), new SyncTeamMembersPayload(teams.memberOf));
         }
     }
 
@@ -96,7 +91,7 @@ public class CitrusTeamManager extends SavedData {
         teamsByName.put(newTeam.getName(), newTeam); //Add the new name
         newTeam.onChanged(world);
         NeoForge.EVENT_BUS.post(new TeamChangedEvent(world, player, oldUUID, newUUID));
-        PacketDistributor.ALL.noArg().send(new ChangeTeamPacket(player, oldUUID, newUUID));
+        PacketDistributor.sendToAllPlayers(new ChangeTeamPayload(player, oldUUID, newUUID));
         setDirty();
     }
 
@@ -153,12 +148,12 @@ public class CitrusTeamManager extends SavedData {
         return data.getCompound("PenguinStatuses");
     }
 
-    public static CitrusTeamManager load(@Nonnull CompoundTag nbt) {
+    public static CitrusTeamManager load(@Nonnull CompoundTag nbt, HolderLookup.Provider provider) {
         CitrusTeamManager teamData = new CitrusTeamManager();
         ListTag data = nbt.getList("Teams", 10);
         for (int i = 0; i < data.size(); i++) {
             CompoundTag tag = data.getCompound(i);
-            CitrusTeam team = new CitrusTeam(tag);
+            CitrusTeam team = new CitrusTeam(tag, provider);
             teamData.teams.put(team.getID(), team);
             teamData.teamsByName.put(team.getName(), team);
             team.members().forEach(member -> teamData.memberOf.put(member, team.getID())); //Add the quick reference for members
@@ -168,10 +163,10 @@ public class CitrusTeamManager extends SavedData {
 
     @Nonnull
     @Override
-    public CompoundTag save(@NotNull CompoundTag compound) {
+    public CompoundTag save(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
         ListTag data = new ListTag();
         for (Map.Entry<UUID, CitrusTeam> entry : teams.entrySet()) {
-            data.add(entry.getValue().serializeNBT());
+            data.add(entry.getValue().serializeNBT(provider));
         }
 
         compound.put("Teams", data);

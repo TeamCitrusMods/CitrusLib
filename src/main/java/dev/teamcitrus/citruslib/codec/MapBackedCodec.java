@@ -18,16 +18,18 @@ import java.util.function.Supplier;
  *
  * @see CitrusCodecs#mapBacked(String, BiMap)
  * @see CitrusCodecs#mapBackedDefaulted(String, BiMap, Codec)
- * Taken from Placebo with consent of Shadows
- * @author Shadows of Fire
- * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class MapBackedCodec<V extends CodecProvider<? super V>> implements Codec<V> {
+
     protected final String name;
     protected final BiMap<ResourceLocation, Codec<? extends V>> registry;
     protected final Supplier<Codec<? extends V>> defaultCodec;
 
+    /**
+     * @see CitrusCodecs#mapBacked(String, BiMap)
+     * @param defaultCodec A supplier for the default codec. The supplier may not be null, but may return null.
+     */
     public MapBackedCodec(String name, BiMap<ResourceLocation, Codec<? extends V>> registry, Supplier<Codec<? extends V>> defaultCodec) {
         this.name = name;
         this.registry = registry;
@@ -58,8 +60,8 @@ public class MapBackedCodec<V extends CodecProvider<? super V>> implements Codec
         if (key == null) {
             return DataResult.error(() -> "Attempted to serialize an element of type " + this.name + " with an unregistered codec! Object: " + input);
         }
-        T encodedKey = ResourceLocation.CODEC.encodeStart(ops, key).getOrThrow(false, CitrusLib.LOGGER::error);
-        T encodedObj = codec.encode(input, ops, prefix).getOrThrow(false, CitrusLib.LOGGER::error);
+        T encodedKey = ResourceLocation.CODEC.encodeStart(ops, key).getOrThrow(IllegalStateException::new);
+        T encodedObj = codec.encode(input, ops, prefix).getOrThrow(IllegalStateException::new);
         return ops.mergeToMap(encodedObj, ops.createString("type"), encodedKey);
     }
 }

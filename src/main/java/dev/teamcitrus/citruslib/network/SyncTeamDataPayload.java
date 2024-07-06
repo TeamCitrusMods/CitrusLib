@@ -14,17 +14,17 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.List;
 import java.util.Optional;
 
-public class SyncTeamDataPacket extends SyncCompoundTagPacket {
-    public static final Type<SyncTeamDataPacket> TYPE = new Type<>(CitrusLib.modLoc("sync_team_data"));
+public class SyncTeamDataPayload extends SyncCompoundTagPayload {
+    public static final Type<SyncTeamDataPayload> TYPE = new Type<>(CitrusLib.modLoc("sync_team_data"));
 
-    public SyncTeamDataPacket(CompoundTag tag) {
+    public SyncTeamDataPayload(CompoundTag tag) {
         super(tag);
     }
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncTeamDataPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncTeamDataPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.COMPOUND_TAG,
-            SyncTeamDataPacket::tag,
-            SyncTeamDataPacket::new
+            SyncTeamDataPayload::tag,
+            SyncTeamDataPayload::new
     );
 
     @Override
@@ -32,20 +32,20 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
         return TYPE;
     }
 
-    public static class Provider implements PayloadProvider<SyncTeamDataPacket, IPayloadContext> {
+    public static class Provider implements PayloadProvider<SyncTeamDataPayload> {
         @Override
-        public Type<SyncTeamDataPacket> type() {
+        public Type<SyncTeamDataPayload> getType() {
             return TYPE;
         }
 
         @Override
-        public StreamCodec<?, ?> codec() {
+        public StreamCodec<? super RegistryFriendlyByteBuf, SyncTeamDataPayload> getCodec() {
             return STREAM_CODEC;
         }
 
         @Override
-        public void handle(SyncTeamDataPacket msg, IPayloadContext ctx) {
-            PayloadHelper.handle(() -> CitrusTeamManagerClient.setInstance(msg.tag), ctx);
+        public void handle(SyncTeamDataPayload msg, IPayloadContext ctx) {
+            CitrusTeamManagerClient.setInstance(msg.tag, ctx.player().level());
         }
 
         @Override
@@ -56,6 +56,11 @@ public class SyncTeamDataPacket extends SyncCompoundTagPacket {
         @Override
         public Optional<PacketFlow> getFlow() {
             return Optional.of(PacketFlow.CLIENTBOUND);
+        }
+
+        @Override
+        public String getVersion() {
+            return "1";
         }
     }
 }

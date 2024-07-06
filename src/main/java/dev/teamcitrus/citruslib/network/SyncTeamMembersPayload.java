@@ -13,16 +13,16 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.*;
 
-public record SyncTeamMembersPacket(HashMap<UUID, UUID> memberOf) implements CustomPacketPayload {
-    public static final Type<SyncTeamMembersPacket> TYPE = new Type<>(CitrusLib.modLoc("sync_team_members"));
+public record SyncTeamMembersPayload(Map<UUID, UUID> memberOf) implements CustomPacketPayload {
+    public static final Type<SyncTeamMembersPayload> TYPE = new Type<>(CitrusLib.modLoc("sync_team_members"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncTeamMembersPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncTeamMembersPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(
                     HashMap::new,
                     UUIDUtil.STREAM_CODEC,
                     UUIDUtil.STREAM_CODEC),
-            SyncTeamMembersPacket::memberOf,
-            SyncTeamMembersPacket::new
+            SyncTeamMembersPayload::memberOf,
+            SyncTeamMembersPayload::new
     );
 
     @Override
@@ -30,20 +30,21 @@ public record SyncTeamMembersPacket(HashMap<UUID, UUID> memberOf) implements Cus
         return type();
     }
 
-    public static class Provider implements PayloadProvider<SyncTeamMembersPacket, IPayloadContext> {
+    public static class Provider implements PayloadProvider<SyncTeamMembersPayload> {
+
         @Override
-        public Type<?> type() {
+        public Type<SyncTeamMembersPayload> getType() {
             return TYPE;
         }
 
         @Override
-        public StreamCodec<?, ?> codec() {
+        public StreamCodec<? super RegistryFriendlyByteBuf, SyncTeamMembersPayload> getCodec() {
             return STREAM_CODEC;
         }
 
         @Override
-        public void handle(SyncTeamMembersPacket msg, IPayloadContext ctx) {
-            PayloadHelper.handle(() -> CitrusTeamManagerClient.setMembers(msg.memberOf), ctx);
+        public void handle(SyncTeamMembersPayload msg, IPayloadContext ctx) {
+            CitrusTeamManagerClient.setMembers(msg.memberOf);
         }
 
         @Override
@@ -54,6 +55,11 @@ public record SyncTeamMembersPacket(HashMap<UUID, UUID> memberOf) implements Cus
         @Override
         public Optional<PacketFlow> getFlow() {
             return Optional.of(PacketFlow.CLIENTBOUND);
+        }
+
+        @Override
+        public String getVersion() {
+            return "1";
         }
     }
 }

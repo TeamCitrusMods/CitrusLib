@@ -1,10 +1,10 @@
 package dev.teamcitrus.citruslib;
 
-import dev.teamcitrus.citruslib.network.ChangeTeamPacket;
+import dev.teamcitrus.citruslib.network.ChangeTeamPayload;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
-import dev.teamcitrus.citruslib.network.SyncTeamDataPacket;
-import dev.teamcitrus.citruslib.network.SyncTeamMembersPacket;
-import dev.teamcitrus.citruslib.reload.ReloadListenerPackets;
+import dev.teamcitrus.citruslib.network.SyncTeamDataPayload;
+import dev.teamcitrus.citruslib.network.SyncTeamMembersPayload;
+import dev.teamcitrus.citruslib.reload.ReloadListenerPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,12 +25,12 @@ public class CitrusLib {
 
     @SubscribeEvent
     private void commonSetup(final FMLCommonSetupEvent event) {
-        PayloadHelper.registerPayload(new ReloadListenerPackets.Start.Provider());
-        PayloadHelper.registerPayload(new ReloadListenerPackets.Content.Provider<>());
-        PayloadHelper.registerPayload(new ReloadListenerPackets.End.Provider());
-        PayloadHelper.registerPayload(new ChangeTeamPacket.Provider());
-        PayloadHelper.registerPayload(new SyncTeamDataPacket.Provider());
-        PayloadHelper.registerPayload(new SyncTeamMembersPacket.Provider());
+        PayloadHelper.registerPayload(new ReloadListenerPayloads.Start.Provider());
+        PayloadHelper.registerPayload(new ReloadListenerPayloads.Content.Provider<>());
+        PayloadHelper.registerPayload(new ReloadListenerPayloads.End.Provider());
+        PayloadHelper.registerPayload(new ChangeTeamPayload.Provider());
+        PayloadHelper.registerPayload(new SyncTeamDataPayload.Provider());
+        PayloadHelper.registerPayload(new SyncTeamMembersPayload.Provider());
     }
 
     public static ResourceLocation modLoc(String id) {

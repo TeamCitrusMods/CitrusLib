@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.stream.Collectors;
 
-public class StringUtils {
+public class StringUtil {
     public static String toTitleCase(String givenString, String regex) {
         String[] stringArray = givenString.split(regex);
         StringBuilder stringBuilder = new StringBuilder();

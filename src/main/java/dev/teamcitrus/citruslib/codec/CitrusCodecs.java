@@ -2,6 +2,7 @@ package dev.teamcitrus.citruslib.codec;
 
 import com.google.common.collect.BiMap;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
@@ -17,6 +18,7 @@ public class CitrusCodecs {
     /**
      * Creates a map-backed codec with a default codec to use as a fallback.
      *
+     * @param <V>          The type being de/serialized.
      * @param name         The name of the type being de/serialized for error logging.
      * @param reg          The codec map.
      * @param defaultCodec The default codec to use if the deserialized object has no type field.
@@ -29,6 +31,7 @@ public class CitrusCodecs {
     /**
      * Creates a map-backed codec. Deserialized objects must have a 'type' field declaring the target codec name.
      *
+     * @param <V>  The type being de/serialized.
      * @param name The name of the type being de/serialized for error logging.
      * @param reg  The codec map.
      * @return A codec backed by the provided map.
@@ -48,20 +51,29 @@ public class CitrusCodecs {
      * Converts a list codec into a set codec.
      */
     public static <T> Codec<Set<T>> setFromList(Codec<List<T>> listCodec) {
-        return listCodec.xmap(HashSet::new, ArrayList::new);
+        return listCodec.<Set<T>>xmap(HashSet::new, ArrayList::new);
     }
 
     /**
      * Creates an enum codec using the lowercase name of the enum values as the keys.
      */
     public static <E extends Enum<E>> Codec<E> enumCodec(Class<E> clazz) {
-        return Codec.stringResolver(e -> e.name().toLowerCase(Locale.ROOT), name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)));
+        return stringResolverCodec(e -> e.name().toLowerCase(Locale.ROOT), name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)));
     }
 
-    /**
-     * Creates a string resolver codec for a type implementing {@link StringRepresentable}.
-     */
-    public static <T extends StringRepresentable> Codec<T> stringResolver(Function<String, T> decoder) {
-        return Codec.stringResolver(StringRepresentable::getSerializedName, decoder);
+    public static <E> Codec<E> stringResolverCodec(Function<E, String> p_184406_, Function<String, E> p_184407_) {
+        return Codec.STRING.flatXmap((p_184404_) -> {
+            return Optional.ofNullable(p_184407_.apply(p_184404_)).map(DataResult::success).orElseGet(() -> {
+                return DataResult.error(() -> {
+                    return "Unknown element name:" + p_184404_;
+                });
+            });
+        }, (p_184401_) -> {
+            return Optional.ofNullable(p_184406_.apply(p_184401_)).map(DataResult::success).orElseGet(() -> {
+                return DataResult.error(() -> {
+                    return "Element with unknown name: " + p_184401_;
+                });
+            });
+        });
     }
 }

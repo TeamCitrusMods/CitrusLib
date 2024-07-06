@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public record ChangeTeamPacket(UUID player, UUID oldTeam, UUID newTeam) implements CustomPacketPayload {
-    public static final Type<ChangeTeamPacket> TYPE = new Type<>(CitrusLib.modLoc("change_team"));
+public record ChangeTeamPayload(UUID player, UUID oldTeam, UUID newTeam) implements CustomPacketPayload {
+    public static final Type<ChangeTeamPayload> TYPE = new Type<>(CitrusLib.modLoc("change_team"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeTeamPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeTeamPayload> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
-            ChangeTeamPacket::player,
+            ChangeTeamPayload::player,
             UUIDUtil.STREAM_CODEC,
-            ChangeTeamPacket::oldTeam,
+            ChangeTeamPayload::oldTeam,
             UUIDUtil.STREAM_CODEC,
-            ChangeTeamPacket::newTeam,
-            ChangeTeamPacket::new
+            ChangeTeamPayload::newTeam,
+            ChangeTeamPayload::new
     );
 
     public UUID player() {
@@ -44,20 +44,20 @@ public record ChangeTeamPacket(UUID player, UUID oldTeam, UUID newTeam) implemen
         return TYPE;
     }
 
-    public static class Provider implements PayloadProvider<ChangeTeamPacket, IPayloadContext> {
+    public static class Provider implements PayloadProvider<ChangeTeamPayload> {
         @Override
-        public Type<ChangeTeamPacket> type() {
+        public Type<ChangeTeamPayload> getType() {
             return TYPE;
         }
 
         @Override
-        public StreamCodec<?, ?> codec() {
+        public StreamCodec<? super RegistryFriendlyByteBuf, ChangeTeamPayload> getCodec() {
             return STREAM_CODEC;
         }
 
         @Override
-        public void handle(ChangeTeamPacket msg, IPayloadContext ctx) {
-            PayloadHelper.handle(() -> CitrusTeamManagerClient.changeTeam(msg.player, msg.oldTeam, msg.newTeam), ctx);
+        public void handle(ChangeTeamPayload msg, IPayloadContext ctx) {
+            CitrusTeamManagerClient.changeTeam(msg.player, msg.oldTeam, msg.newTeam);
         }
 
         @Override
@@ -68,6 +68,11 @@ public record ChangeTeamPacket(UUID player, UUID oldTeam, UUID newTeam) implemen
         @Override
         public Optional<PacketFlow> getFlow() {
             return Optional.of(PacketFlow.CLIENTBOUND);
+        }
+
+        @Override
+        public String getVersion() {
+            return "1";
         }
     }
 }

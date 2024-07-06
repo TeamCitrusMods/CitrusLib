@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.HashMap;
@@ -17,62 +18,49 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Taken from Placebo with consent of Shadows
- * @author Shadows of Fire
- * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
- */
 public class PayloadHelper {
-    private static final Map<ResourceLocation, PayloadProvider<?, ?>> ALL_PROVIDERS = new HashMap<>();
+    private static final Map<CustomPacketPayload.Type<?>, PayloadProvider<?>> ALL_PROVIDERS = new HashMap<>();
     private static boolean locked = false;
 
-    public static <T extends CustomPacketPayload, C extends IPayloadContext> void registerPayload(PayloadProvider<T, C> prov) {
+    /**
+     * Registers a payload using {@link PayloadProvider}.
+     *
+     * @param prov    An instance of the payload provider.
+     */
+    public static <T extends CustomPacketPayload> void registerPayload(PayloadProvider<T> prov) {
         Preconditions.checkNotNull(prov);
         synchronized (ALL_PROVIDERS) {
             if (locked) throw new UnsupportedOperationException("Attempted to register a payload provider after registration has finished.");
-            if (ALL_PROVIDERS.containsKey(prov.type().id())) throw new UnsupportedOperationException("Attempted to register payload provider with duplicate ID: " + prov.type().id());
-            ALL_PROVIDERS.put(prov.type().id(), prov);
+            if (ALL_PROVIDERS.containsKey(prov.getType())) throw new UnsupportedOperationException("Attempted to register payload provider with duplicate ID: " + prov.getType().id());
+            ALL_PROVIDERS.put(prov.getType(), prov);
         }
     }
 
-    public static void handle(Runnable r, IPayloadContext ctx) {
-        ctx.enqueueWork(r);
-    }
-
     @SubscribeEvent
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void registerProviders(RegisterPayloadHandlersEvent event) {
         synchronized (ALL_PROVIDERS) {
             for (PayloadProvider prov : ALL_PROVIDERS.values()) {
-                PayloadRegistrar reg = event.registrar(prov.type().id().getNamespace());
-
-                if (prov.isOptional()) {
-                    reg = reg.optional();
-                }
-
-                reg = reg.versioned(prov.getVersion()); // Using a rawtype also rawtypes the Optional
-
-                //reg.common(prov.id(), prov::read, new PayloadHandler(prov));
-                reg.commonBidirectional(prov.type(), prov.codec(), new PayloadHandler(prov));
+                NetworkRegistry.register(prov.getType(), prov.getCodec(), new PayloadHandler(prov), prov.getSupportedProtocols(), prov.getFlow(), prov.getVersion(), prov.isOptional());
             }
             locked = true;
         }
     }
 
-    private static class PayloadHandler<T extends CustomPacketPayload, C extends IPayloadContext> implements IPayloadHandler<T> {
-        private PayloadProvider<T, C> provider;
+    private static class PayloadHandler<T extends CustomPacketPayload> implements IPayloadHandler<T> {
+
+        private PayloadProvider<T> provider;
         private Optional<PacketFlow> flow;
         private List<ConnectionProtocol> protocols;
 
-        private PayloadHandler(PayloadProvider<T, C> provider) {
+        private PayloadHandler(PayloadProvider<T> provider) {
             this.provider = provider;
             this.flow = provider.getFlow();
             this.protocols = provider.getSupportedProtocols();
-            Preconditions.checkArgument(!this.protocols.isEmpty(), "The payload registration for " + provider.type().id() + " must specify at least one valid protocol.");
+            Preconditions.checkArgument(!this.protocols.isEmpty(), "The payload registration for " + provider.getType().id() + " must specify at least one valid protocol.");
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public void handle(T payload, IPayloadContext context) {
             if (this.flow.isPresent() && this.flow.get() != context.flow()) {
                 CitrusLib.LOGGER.error("Received a payload {} on the incorrect side.", payload.type().id());
@@ -84,7 +72,11 @@ public class PayloadHelper {
                 return;
             }
 
-            this.provider.handle(payload, (C) context);
+            switch (provider.getHandlerThread()) {
+                case MAIN -> context.enqueueWork(() -> this.provider.handle(payload, context));
+                case NETWORK -> this.provider.handle(payload, context);
+            }
         }
     }
+
 }
