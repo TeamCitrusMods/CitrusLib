@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.teamcitrus.citruslib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AnvilBlockMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
