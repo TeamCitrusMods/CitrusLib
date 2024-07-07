@@ -28,7 +28,7 @@ public record SyncTeamMembersPayload(Map<UUID, UUID> memberOf) implements Custom
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return type();
+        return TYPE;
     }
 
     public static class Provider implements PayloadProvider<SyncTeamMembersPayload> {
