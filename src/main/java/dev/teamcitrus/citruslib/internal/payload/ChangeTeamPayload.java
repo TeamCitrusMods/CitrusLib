@@ -1,4 +1,4 @@
-package dev.teamcitrus.citruslib.payload;
+package dev.teamcitrus.citruslib.internal.payload;
 
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.network.PayloadProvider;

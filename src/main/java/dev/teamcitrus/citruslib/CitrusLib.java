@@ -1,9 +1,9 @@
 package dev.teamcitrus.citruslib;
 
-import dev.teamcitrus.citruslib.payload.ChangeTeamPayload;
+import dev.teamcitrus.citruslib.internal.payload.ChangeTeamPayload;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
-import dev.teamcitrus.citruslib.payload.SyncTeamDataPayload;
-import dev.teamcitrus.citruslib.payload.SyncTeamMembersPayload;
+import dev.teamcitrus.citruslib.internal.payload.SyncTeamDataPayload;
+import dev.teamcitrus.citruslib.internal.payload.SyncTeamMembersPayload;
 import dev.teamcitrus.citruslib.reload.ReloadListenerPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;

@@ -1,4 +1,4 @@
-package dev.teamcitrus.citruslib.payload;
+package dev.teamcitrus.citruslib.internal.payload;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
