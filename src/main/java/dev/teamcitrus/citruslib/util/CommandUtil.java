@@ -12,7 +12,7 @@ public class CommandUtil {
 
     public static Component withClickableCommand(ChatFormatting color, String command, String tooltip, Object... formatting) {
         return Component.translatable(command, formatting).withStyle((style) -> style.withColor(color)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command + StringUtil.join(' ', formatting)))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command + JavaUtil.join(' ', formatting)))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(tooltip))));
     }
 }
