@@ -11,6 +11,6 @@ public class EnUsProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add("tooltip.citruslib.wip", "Item is W.I.P");
+        add("tooltip.citruslib.wip", "This Item is still WIP");
     }
 }

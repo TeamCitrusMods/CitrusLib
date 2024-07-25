@@ -2,6 +2,7 @@ package dev.teamcitrus.citruslib.internal.events.item;
 
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.item.CitrusItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -13,7 +14,7 @@ public class ItemEvents {
     public static void onTooltipEvent(ItemTooltipEvent event) {
         if (event.getItemStack().getItem() instanceof CitrusItem item) {
             if (item.isWIP()) {
-                event.getToolTip().add(Component.translatable("tooltip.citruslib.wip"));
+                event.getToolTip().add(Component.translatable("tooltip.citruslib.wip").withStyle(ChatFormatting.DARK_GRAY));
             }
         }
     }
