@@ -51,14 +51,12 @@ public abstract class CitrusDynamicRegistryProvider<T extends CodecProvider<T>> 
      * @param id     The id of the object
      * @param object The object
      */
-    @SuppressWarnings("unchecked")
     protected final void add(ResourceLocation id, T object) {
         this.futures.add(DataProvider.saveStable(this.cachedOutput, DatagenUtil.toJson(object), this.pathProvider.json(id)));
     }
 
     /**
      * Generates all items provided by this provider.
-     * <p>
      * Use {@link #add(ResourceLocation, CodecProvider)} to supply items.
      */
     public abstract void generate();

@@ -1,9 +1,6 @@
 package dev.teamcitrus.citruslib;
 
-import dev.teamcitrus.citruslib.internal.payload.ChangeTeamPayload;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
-import dev.teamcitrus.citruslib.internal.payload.SyncTeamDataPayload;
-import dev.teamcitrus.citruslib.internal.payload.SyncTeamMembersPayload;
 import dev.teamcitrus.citruslib.reload.ReloadListenerPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -28,9 +25,6 @@ public class CitrusLib {
         PayloadHelper.registerPayload(new ReloadListenerPayloads.Start.Provider());
         PayloadHelper.registerPayload(new ReloadListenerPayloads.Content.Provider<>());
         PayloadHelper.registerPayload(new ReloadListenerPayloads.End.Provider());
-        PayloadHelper.registerPayload(new ChangeTeamPayload.Provider());
-        PayloadHelper.registerPayload(new SyncTeamDataPayload.Provider());
-        PayloadHelper.registerPayload(new SyncTeamMembersPayload.Provider());
     }
 
     public static ResourceLocation modLoc(String id) {
