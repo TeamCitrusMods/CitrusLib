@@ -1,5 +1,6 @@
 package dev.teamcitrus.citruslib;
 
+import dev.teamcitrus.citruslib.internal.registry.BlockEntityRegistry;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
 import dev.teamcitrus.citruslib.reload.ReloadListenerPayloads;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class CitrusLib {
     public CitrusLib(IEventBus bus) {
         bus.register(this);
         bus.register(new PayloadHelper());
+        BlockEntityRegistry.BLOCK_ENTITIES.register(bus);
     }
 
     @SubscribeEvent
