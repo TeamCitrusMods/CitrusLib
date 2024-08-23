@@ -3,6 +3,7 @@ package dev.teamcitrus.citruslib;
 import dev.teamcitrus.citruslib.internal.registry.BlockEntityRegistry;
 import dev.teamcitrus.citruslib.network.PayloadHelper;
 import dev.teamcitrus.citruslib.reload.ReloadListenerPayloads;
+import dev.teamcitrus.citruslib.tab.TabFillingRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ public class CitrusLib {
     public CitrusLib(IEventBus bus) {
         bus.register(this);
         bus.register(new PayloadHelper());
+        bus.addListener(TabFillingRegistry::fillTabs);
         BlockEntityRegistry.BLOCK_ENTITIES.register(bus);
     }
 
