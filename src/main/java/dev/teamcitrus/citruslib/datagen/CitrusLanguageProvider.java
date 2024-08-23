@@ -8,9 +8,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class CitrusLanguageProvider extends LanguageProvider {
     private final String modid;
@@ -25,7 +28,7 @@ public abstract class CitrusLanguageProvider extends LanguageProvider {
     }
 
     public void generateItemLanguageKeys(DeferredRegister<Item> register, List<Item> blacklist) {
-        var registrar = register.getEntries();
+        Set<DeferredHolder<Item, ? extends Item>> registrar = new HashSet<>(register.getEntries());
         JavaUtil.takeAll(registrar, i -> i.get() instanceof BlockItem);
         JavaUtil.takeAll(registrar, i -> blacklist.contains(i.get()));
         registrar.forEach(i -> {
@@ -40,7 +43,7 @@ public abstract class CitrusLanguageProvider extends LanguageProvider {
     }
 
     public void generateBlockLanguageKeys(DeferredRegister<Block> register, List<Block> blacklist) {
-        var registrar = register.getEntries();
+        Set<DeferredHolder<Block, ? extends Block>> registrar = new HashSet<>(register.getEntries());
         JavaUtil.takeAll(registrar, i -> i.get() instanceof WallSignBlock);
         JavaUtil.takeAll(registrar, i -> i.get() instanceof WallHangingSignBlock);
         JavaUtil.takeAll(registrar, i -> blacklist.contains(i.get()));
