@@ -25,7 +25,7 @@ public abstract class CitrusItemModelProvider extends ItemModelProvider {
 
     public void spawnEggItem(Item item) {
         getBuilder(item.toString())
-                .parent(new ModelFile.UncheckedModelFile("minecraft:item/template_spawn_egg"));
+                .parent(new ModelFile.UncheckedModelFile("item/template_spawn_egg"));
     }
 
     public void handheldItem(Item item) {

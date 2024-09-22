@@ -10,8 +10,4 @@ public class CitrusItem extends Item {
     public CitrusItem() {
         this(new Properties());
     }
-
-    public boolean isWIP() {
-        return false;
-    }
 }

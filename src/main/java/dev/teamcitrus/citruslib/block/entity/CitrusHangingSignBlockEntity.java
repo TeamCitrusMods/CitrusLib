@@ -1,5 +1,6 @@
 package dev.teamcitrus.citruslib.block.entity;
 
+import dev.teamcitrus.citruslib.internal.registry.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
@@ -12,6 +13,6 @@ public class CitrusHangingSignBlockEntity extends HangingSignBlockEntity {
 
     @Override
     public BlockEntityType<?> getType() {
-        return super.getType();
+        return BlockEntityRegistry.CITRUS_HANGING_SIGN.get();
     }
 }
