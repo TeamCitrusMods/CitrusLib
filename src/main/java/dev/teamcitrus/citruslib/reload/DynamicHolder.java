@@ -1,5 +1,6 @@
 package dev.teamcitrus.citruslib.reload;
 
+import dev.teamcitrus.citruslib.codec.CodecProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,9 +15,9 @@ import java.util.function.Supplier;
  * <p>
  * Dynamic Holders are interned, and as such are reference (==) comparable with others from the same registry.
  *
- * @param <T> The type of the target value.
+ * @param <R> The registry type of the target value.
  */
-public class DynamicHolder<T> implements Supplier<T> {
+public class DynamicHolder<R extends CodecProvider<? super R>> implements Supplier<R> {
 
     /**
      * The ID of an "empty" holder.
@@ -25,19 +26,19 @@ public class DynamicHolder<T> implements Supplier<T> {
      */
     public static final ResourceLocation EMPTY = ResourceLocation.fromNamespaceAndPath("empty", "empty");
 
-    protected final DynamicRegistry<? super T> registry;
+    protected final DynamicRegistry<R> registry;
     protected final ResourceLocation id;
 
     /**
      * The current data. Null when unbound.
      */
     @Nullable
-    protected T value;
+    protected R value;
 
     /**
      * @see DynamicRegistry#holder(ResourceLocation)
      */
-    DynamicHolder(DynamicRegistry<? super T> registry, ResourceLocation id) {
+    DynamicHolder(DynamicRegistry<R> registry, ResourceLocation id) {
         this.id = id;
         this.registry = registry;
     }
@@ -59,7 +60,7 @@ public class DynamicHolder<T> implements Supplier<T> {
      * @throws NullPointerException if the value is not {@linkplain #isPresent() present}.
      */
     @Override
-    public T get() {
+    public R get() {
         this.bind();
         Objects.requireNonNull(this.value, "Trying to access unbound value: " + this.id);
         return this.value;
@@ -68,8 +69,8 @@ public class DynamicHolder<T> implements Supplier<T> {
     /**
      * @return An optional containing the target value if this {@link #isBound()}, otherwise {@link Optional#empty()}.
      */
-    public Optional<T> getOptional() {
-        return this.isBound() ? Optional.of(this.value()) : Optional.empty();
+    public Optional<R> getOptional() {
+        return this.isBound() ? Optional.of(this.get()) : Optional.empty();
     }
 
     /**
@@ -106,7 +107,7 @@ public class DynamicHolder<T> implements Supplier<T> {
     @SuppressWarnings("unchecked")
     void bind() {
         if (this.value != null) return;
-        this.value = (T) this.registry.getValue(this.id);
+        this.value = (R) this.registry.getValue(this.id);
     }
 
     /**
@@ -115,10 +116,5 @@ public class DynamicHolder<T> implements Supplier<T> {
      */
     void unbind() {
         this.value = null;
-    }
-
-    @Deprecated(forRemoval = true)
-    public T value() {
-        return this.get();
     }
 }

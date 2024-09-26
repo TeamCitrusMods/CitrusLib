@@ -13,6 +13,7 @@ import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.codec.CodecMap;
 import dev.teamcitrus.citruslib.codec.CodecProvider;
 import dev.teamcitrus.citruslib.util.JsonUtil;
+import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.CodecException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -57,6 +58,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
     protected final boolean subtypes;
     protected final CodecMap<R> codecs;
     protected final Codec<DynamicHolder<R>> holderCodec;
+    protected final StreamCodec<ByteBuf, DynamicHolder<R>> holderStreamCodec;
     protected final BiMap<ResourceLocation, StreamCodec<RegistryFriendlyByteBuf, ? extends R>> streamCodecs;
 
     /**
@@ -74,7 +76,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
     /**
      * Map of all holders that have ever been requested for this registry.
      */
-    private final Map<ResourceLocation, DynamicHolder<? extends R>> holders = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, DynamicHolder<R>> holders = new ConcurrentHashMap<>();
 
     /**
      * List of callbacks attached to this registry.
@@ -106,6 +108,7 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
             throw new RuntimeException("Attempted to create a dynamic registry for " + path + " with no built-in codecs!");
         }
         this.holderCodec = ResourceLocation.CODEC.xmap(this::holder, DynamicHolder::getId);
+        this.holderStreamCodec = ResourceLocation.STREAM_CODEC.map(this::holder, DynamicHolder::getId);
     }
 
     /**
@@ -216,13 +219,14 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
     /**
      * Creates a {@link DynamicHolder} pointing to a value stored in this reload listener.
      *
-     * @param <T> The type of the target value.
-     * @param id  The ID of the target value.
+     * @param id The ID of the target value.
      * @return A dynamic registry object pointing to the target value.
      */
-    @SuppressWarnings("unchecked")
-    public <T extends R> DynamicHolder<T> holder(ResourceLocation id) {
-        return (DynamicHolder<T>) this.holders.computeIfAbsent(id, k -> new DynamicHolder<>(this, k));
+    public DynamicHolder<R> holder(@Nullable ResourceLocation id) {
+        if (id == null) {
+            return this.emptyHolder();
+        }
+        return this.holders.computeIfAbsent(id, k -> new DynamicHolder<>(this, k));
     }
 
     /**
@@ -232,8 +236,8 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
      *
      * @see #holder(ResourceLocation)
      */
-    public <T extends R> DynamicHolder<T> holder(T t) {
-        ResourceLocation key = this.getKey(t);
+    public DynamicHolder<R> holder(R value) {
+        ResourceLocation key = this.getKey(value);
         return this.holder(key == null ? DynamicHolder.EMPTY : key);
     }
 
@@ -254,6 +258,20 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
      */
     public Codec<DynamicHolder<R>> holderCodec() {
         return this.holderCodec;
+    }
+
+    /**
+     * Returns a {@link StreamCodec} that can handle {@link DynamicHolder}s for this registry.<br>
+     * The dynamic holders will be transmitted as {@link ResourceLocation}s using {@link ResourceLocation#STREAM_CODEC}.
+     *
+     * @return The Dynamic Holder Stream Codec for this registry.
+     * @throws UnsupportedOperationException if this is not a synced registry.
+     */
+    public StreamCodec<ByteBuf, DynamicHolder<R>> holderStreamCodec() {
+        if (!this.synced) {
+            throw new UnsupportedOperationException("Cannot retrieve a stream codec for the non-synced DynamicRegistry: " + this.path);
+        }
+        return this.holderStreamCodec;
     }
 
     /**
@@ -366,6 +384,20 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
      * @implNote Not executed when hosting a singleplayer world, as it would replace the server data.
      */
     private void pushStagedToLive() {
+        this.beginReload();
+        this.staged.forEach(this::register);
+        this.onReload();
+    }
+
+    /**
+     * Performs a fake reload by making a copy of {@link #registry} and re-registering the original contents.
+     * This triggers the full reload process for the client.
+     *
+     * @implNote This is used instead of {@link #pushStagedToLive()} for singleplayer hosts to avoid data loss.
+     */
+    private void triggerClientsideReload() {
+        this.staged.clear();
+        this.staged.putAll(this.registry);
         this.beginReload();
         this.staged.forEach(this::register);
         this.onReload();
@@ -487,9 +519,14 @@ public abstract class DynamicRegistry<R extends CodecProvider<? super R>> extend
          */
         static void endSync(String path) {
             if (ServerLifecycleHooks.getCurrentServer() != null) {
-                return; // Do not propagate received changes on the host of a singleplayer world, as they may not receive the full data.
+                // On a singleplayer host, we have to re-register a copy of the original data instead of the synced data
+                // since the synced data may not contain the "full" information from the server.
+                ifPresent(path, DynamicRegistry::triggerClientsideReload);
             }
-            ifPresent(path, DynamicRegistry::pushStagedToLive);
+            else {
+                ifPresent(path, DynamicRegistry::pushStagedToLive);
+            }
+            CitrusLib.LOGGER.info("Completed sync for {}", path);
         }
 
         /**
