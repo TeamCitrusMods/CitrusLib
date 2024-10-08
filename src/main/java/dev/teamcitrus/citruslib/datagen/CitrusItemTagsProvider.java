@@ -4,7 +4,10 @@ import dev.teamcitrus.citruslib.block.WoodSet;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -15,6 +18,18 @@ import java.util.concurrent.CompletableFuture;
 public abstract class CitrusItemTagsProvider extends ItemTagsProvider {
     public CitrusItemTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, CompletableFuture<TagLookup<Block>> pBlockTags, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pLookupProvider, pBlockTags, modId, existingFileHelper);
+    }
+
+    public TagKey<Item> modTag(String id) {
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(this.modId, id));
+    }
+
+    public TagKey<Item> commonTag(String id) {
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", id));
+    }
+
+    public TagKey<Item> modSupportTag(String modId, String id) {
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(modId, id));
     }
 
     public void generateSetTags(WoodSet woodSet) {
