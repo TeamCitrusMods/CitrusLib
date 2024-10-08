@@ -1,6 +1,7 @@
 package dev.teamcitrus.citruslib.util;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -18,7 +19,7 @@ public class JavaUtil {
     }
 
     public static String join(char character, Object... vars) {
-        return org.apache.commons.lang3.StringUtils.join(Lists.newArrayList(vars).stream().map(Object::toString).collect(Collectors.toList()), character);
+        return StringUtils.join(Lists.newArrayList(vars).stream().map(Object::toString).collect(Collectors.toList()), character);
     }
 
     public static <T> void takeAll(Collection<T> src, Predicate<T> pred) {
