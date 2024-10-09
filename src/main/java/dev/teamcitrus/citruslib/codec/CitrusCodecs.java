@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 
 import java.util.*;
 import java.util.function.Function;
