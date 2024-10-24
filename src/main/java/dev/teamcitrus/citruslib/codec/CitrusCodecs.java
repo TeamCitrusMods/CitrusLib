@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * Taken from Placebo with consent of Shadows
  * @author Shadows of Fire
- * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.20.4">...</a>
+ * @link <a href="https://github.com/Shadows-of-Fire/Placebo/tree/1.21">...</a>
  */
 public class CitrusCodecs {
     /**
