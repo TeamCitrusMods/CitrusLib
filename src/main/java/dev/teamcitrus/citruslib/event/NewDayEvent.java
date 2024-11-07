@@ -8,12 +8,12 @@ import net.neoforged.neoforge.event.level.LevelEvent;
  * An event that is fired at the start of every new day (Aka at the vanilla wakeup time after sleeping)
  */
 public class NewDayEvent extends LevelEvent {
-    public NewDayEvent(LevelAccessor level) {
+    public NewDayEvent(ServerLevel level) {
         super(level);
     }
 
     @Override
     public ServerLevel getLevel() {
-        return (ServerLevel)super.getLevel();
+        return (ServerLevel) super.getLevel();
     }
 }
