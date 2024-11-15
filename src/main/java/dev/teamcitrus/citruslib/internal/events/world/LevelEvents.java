@@ -7,13 +7,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
-
+    
 @EventBusSubscriber(modid = CitrusLib.MODID)
 public class LevelEvents {
     @SubscribeEvent
-    public static void onLevelTick(LevelTickEvent.Post event) {
-        if(event.getLevel() instanceof ServerLevel level && event.getLevel().getDayTime() % 24000L == 1) {
-            NeoForge.EVENT_BUS.post(new NewDayEvent(level));
+    public static void onLevelTick(LevelTickEvent.Pre event) {
+        if (event.getLevel().getDayTime() % 24000L == 1) {
+            if (event.getLevel() instanceof ServerLevel level) {
+                NeoForge.EVENT_BUS.post(new NewDayEvent(level));
+            }
         }
     }
 }
