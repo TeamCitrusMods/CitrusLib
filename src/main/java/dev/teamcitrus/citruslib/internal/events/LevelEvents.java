@@ -1,4 +1,4 @@
-package dev.teamcitrus.citruslib.internal.events.world;
+package dev.teamcitrus.citruslib.internal.events;
 
 import dev.teamcitrus.citruslib.CitrusLib;
 import dev.teamcitrus.citruslib.event.NewDayEvent;
@@ -12,10 +12,8 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 public class LevelEvents {
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Pre event) {
-        if (event.getLevel().getDayTime() % 24000L == 1) {
-            if (event.getLevel() instanceof ServerLevel level) {
-                NeoForge.EVENT_BUS.post(new NewDayEvent(level));
-            }
+        if (event.getLevel().getDayTime() % 24000L == 1 && event.getLevel() instanceof ServerLevel level) {
+            NeoForge.EVENT_BUS.post(new NewDayEvent(level));
         }
     }
 }
