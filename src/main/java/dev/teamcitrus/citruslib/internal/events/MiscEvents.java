@@ -15,7 +15,7 @@ public class MiscEvents {
         PotionBrewing.Builder builder = event.getBuilder();
         RegistryAccess access = event.getRegistryAccess();
 
-        access.registryOrThrow(CitrusLibRegistries.BREWING_RECIPE).stream().forEach(potion -> {
+        access.lookupOrThrow(CitrusLibRegistries.BREWING_RECIPE).stream().forEach(potion -> {
             builder.addRecipe(potion.base(), potion.reagent(), potion.output());
         });
     }

@@ -9,7 +9,6 @@ version="${mod_version}"
 displayName="${mod_name}"
 displayURL="https://github.com/TeamCitrusMods/CitrusLib"
 #logoFile="examplemod.png" #optional
-#credits="" #optional
 authors="${mod_authors}"
 description='''${mod_description}'''
 

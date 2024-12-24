@@ -1,20 +1,24 @@
 package dev.teamcitrus.citruslib.datagen;
 
 import dev.teamcitrus.citruslib.block.WoodSet;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
 
 public abstract class CitrusRecipeProvider extends RecipeProvider {
-    public CitrusRecipeProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
-        super(pOutput, pRegistries);
+    public CitrusRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries, output);
     }
 
     public void generateWoodSetRecipes(RecipeOutput recipeOutput, WoodSet woodSet) {
-        ShapedRecipeBuilder.shaped(
+        HolderGetter<Item> items = registries.lookupOrThrow(Registries.ITEM);
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.BUILDING_BLOCKS, woodSet.getStairs(), 4
         ).define('#', woodSet.getPlanks())
                 .pattern("#  ")
@@ -23,14 +27,14 @@ public abstract class CitrusRecipeProvider extends RecipeProvider {
                 .group("wooden_stairs")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.BUILDING_BLOCKS, woodSet.getSlab(), 6
         ).define('#', woodSet.getPlanks())
                 .pattern("###")
                 .group("wooden_slab")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.MISC, woodSet.getFence(), 4
         ).define('#', Items.STICK).define('W', woodSet.getPlanks())
                 .pattern("W#W")
@@ -38,7 +42,7 @@ public abstract class CitrusRecipeProvider extends RecipeProvider {
                 .group("wooden_fence")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                         RecipeCategory.REDSTONE, woodSet.getFenceGate()
                 ).define('#', Items.STICK).define('W', woodSet.getPlanks())
                 .pattern("#W#")
@@ -46,7 +50,7 @@ public abstract class CitrusRecipeProvider extends RecipeProvider {
                 .group("wooden_fence_gate")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.REDSTONE, woodSet.getDoor(), 3
         ).define('#', woodSet.getPlanks())
                 .pattern("##")
@@ -55,7 +59,7 @@ public abstract class CitrusRecipeProvider extends RecipeProvider {
                 .group("wooden_door")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.REDSTONE, woodSet.getTrapDoor(), 2
         ).define('#', woodSet.getPlanks())
                 .pattern("###")
@@ -63,14 +67,14 @@ public abstract class CitrusRecipeProvider extends RecipeProvider {
                 .group("wooden_trapdoor")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(
+        ShapedRecipeBuilder.shaped(items,
                 RecipeCategory.REDSTONE, woodSet.getPressurePlate()
         ).define('#', woodSet.getPlanks())
                 .pattern("##")
                 .group("wooden_pressure_plate")
                 .unlockedBy("has_item", has(woodSet.getPlanks()))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(
+        ShapelessRecipeBuilder.shapeless(items,
                 RecipeCategory.REDSTONE, woodSet.getButton()
         ).requires(woodSet.getPlanks())
                 .group("wooden_button")
