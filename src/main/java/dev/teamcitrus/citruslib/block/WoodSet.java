@@ -1,7 +1,10 @@
 package dev.teamcitrus.citruslib.block;
 
 import com.mojang.serialization.Codec;
+import dev.teamcitrus.citruslib.CitrusLib;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -51,15 +54,15 @@ public class WoodSet {
     public static WoodSet registerSetBlocks(DeferredRegister.Blocks register, String woodName) {
         BlockSetType blockType = new BlockSetType(woodName);
         WoodType woodType = new WoodType(woodName, blockType);
-        DeferredBlock<Block> planks = register.register(woodName + "_planks", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
-        DeferredBlock<StairBlock> stairs = register.register(woodName + "_stairs", () -> new StairBlock(planks.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_STAIRS)));
-        DeferredBlock<SlabBlock> slab = register.register(woodName + "_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB)));
-        DeferredBlock<FenceBlock> fence = register.register(woodName + "_fence", () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE)));
-        DeferredBlock<FenceGateBlock> fenceGate = register.register(woodName + "_fence_gate", () -> new FenceGateBlock(woodType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE)));
-        DeferredBlock<DoorBlock> door = register.register(woodName + "_door", () -> new DoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR)));
-        DeferredBlock<TrapDoorBlock> trapdoor = register.register(woodName + "_trapdoor", () -> new TrapDoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR)));
-        DeferredBlock<PressurePlateBlock> pressure_plate = register.register(woodName + "_pressure_plate", () -> new PressurePlateBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)));
-        DeferredBlock<ButtonBlock> button = register.register(woodName + "_button", () -> new ButtonBlock(blockType, 30, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON)));
+        DeferredBlock<Block> planks = register.register(woodName + "_planks", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).setId(keyCreator(woodName + "_planks"))));
+        DeferredBlock<StairBlock> stairs = register.register(woodName + "_stairs", () -> new StairBlock(planks.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_STAIRS).setId(keyCreator(woodName + "_stairs"))));
+        DeferredBlock<SlabBlock> slab = register.register(woodName + "_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB).setId(keyCreator(woodName + "_slab"))));
+        DeferredBlock<FenceBlock> fence = register.register(woodName + "_fence", () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE).setId(keyCreator(woodName + "_fence"))));
+        DeferredBlock<FenceGateBlock> fenceGate = register.register(woodName + "_fence_gate", () -> new FenceGateBlock(woodType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE).setId(keyCreator(woodName + "_fence_gate"))));
+        DeferredBlock<DoorBlock> door = register.register(woodName + "_door", () -> new DoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR).setId(keyCreator(woodName + "_door"))));
+        DeferredBlock<TrapDoorBlock> trapdoor = register.register(woodName + "_trapdoor", () -> new TrapDoorBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR).setId(keyCreator(woodName + "_trapdoor"))));
+        DeferredBlock<PressurePlateBlock> pressure_plate = register.register(woodName + "_pressure_plate", () -> new PressurePlateBlock(blockType, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE).setId(keyCreator(woodName + "_pressure_plate"))));
+        DeferredBlock<ButtonBlock> button = register.register(woodName + "_button", () -> new ButtonBlock(blockType, 30, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON).setId(keyCreator(woodName + "_button"))));
         return register(new WoodSet(woodName, planks, stairs, slab, fence, fenceGate,
                 door, trapdoor, pressure_plate, button));
     }
@@ -118,5 +121,9 @@ public class WoodSet {
 
     public DeferredBlock<ButtonBlock> getButton() {
         return this.button;
+    }
+
+    private static ResourceKey<Block> keyCreator(String name) {
+        return ResourceKey.create(Registries.BLOCK, CitrusLib.modLoc(name));
     }
 }
