@@ -4,7 +4,7 @@ import dev.teamcitrus.citruslib.network.PayloadHelper;
 import dev.teamcitrus.citruslib.tab.TabFillingRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +24,7 @@ public class CitrusLib {
     }
 
     @ApiStatus.Internal
-    public static ResourceLocation modLoc(String id) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, id);
+    public static Identifier modLoc(String id) {
+        return Identifier.fromNamespaceAndPath(MODID, id);
     }
 }

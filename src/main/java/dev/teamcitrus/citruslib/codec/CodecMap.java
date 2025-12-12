@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
 
     protected final String name;
-    private final BiMap<ResourceLocation, Codec<? extends V>> codecs = HashBiMap.create();
+    private final BiMap<Identifier, Codec<? extends V>> codecs = HashBiMap.create();
     private final Codec<V> codec;
 
     @Nullable
@@ -60,7 +60,7 @@ public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
     /**
      * Returns true if a codecs with the passed type key exists.
      */
-    public boolean containsKey(ResourceLocation key) {
+    public boolean containsKey(Identifier key) {
         return this.codecs.containsKey(key);
     }
 
@@ -71,7 +71,7 @@ public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
      * @return The codec registered with the passed key, or null, if none exists.
      */
     @Nullable
-    public Codec<? extends V> getValue(ResourceLocation key) {
+    public Codec<? extends V> getValue(Identifier key) {
         return this.codecs.get(key);
     }
 
@@ -82,7 +82,7 @@ public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
      * @return The key of the codec, or null, if it is not registered.
      */
     @Nullable
-    public ResourceLocation getKey(Codec<?> codec) {
+    public Identifier getKey(Codec<?> codec) {
         return this.codecs.inverse().get(codec);
     }
 
@@ -93,7 +93,7 @@ public class CodecMap<V extends CodecProvider<? super V>> implements Codec<V> {
      * @param codec The codec being registered.
      * @throws UnsupportedOperationException if the key or codec is already registered.
      */
-    public void register(ResourceLocation key, Codec<? extends V> codec) {
+    public void register(Identifier key, Codec<? extends V> codec) {
         synchronized (this.codecs) {
             if (this.codecs.containsKey(key)) {
                 throw new UnsupportedOperationException("Attempted to register a " + this.name + " codec with key " + key + " but one already exists!");

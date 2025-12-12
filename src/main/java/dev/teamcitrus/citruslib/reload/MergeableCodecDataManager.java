@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -24,7 +24,7 @@ import java.util.function.Function;
  * @param <RAW> The type of the objects that the codec is parsing jsons as
  * @param <FINE> The type of the object we get after merging the parsed objects. Can be the same as RAW
  */
-public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReloadListener<Map<ResourceLocation, FINE>> {
+public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReloadListener<Map<Identifier, FINE>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** ".json" **/
@@ -33,7 +33,7 @@ public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReload
     protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
     /** the loaded data **/
-    protected Map<ResourceLocation, FINE> data = new HashMap<>();
+    protected Map<Identifier, FINE> data = new HashMap<>();
 
     private final String folderName;
     private final Codec<RAW> codec;
@@ -65,21 +65,21 @@ public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReload
     /**
      * @return The immutable map of data entries
      */
-    public Map<ResourceLocation, FINE> getData() {
+    public Map<Identifier, FINE> getData() {
         return this.data;
     }
 
     /** Off-thread processing (can include reading files from hard drive) **/
     @Override
-    protected Map<ResourceLocation, FINE> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
-        final Map<ResourceLocation, FINE> map = new HashMap<>();
+    protected Map<Identifier, FINE> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
+        final Map<Identifier, FINE> map = new HashMap<>();
 
-        Map<ResourceLocation, List<Resource>> resourceStacks = resourceManager.listResourceStacks(this.folderName, id -> id.getPath().endsWith(JSON_EXTENSION));
+        Map<Identifier, List<Resource>> resourceStacks = resourceManager.listResourceStacks(this.folderName, id -> id.getPath().endsWith(JSON_EXTENSION));
         for (var entry : resourceStacks.entrySet()) {
             List<RAW> raws = new ArrayList<>();
-            ResourceLocation fullId = entry.getKey();
+            Identifier fullId = entry.getKey();
             String fullPath = fullId.getPath(); // includes folderName/ and .json
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
+            Identifier id = Identifier.fromNamespaceAndPath(
                     fullId.getNamespace(),
                     fullPath.substring(this.folderName.length() + 1, fullPath.length() - JSON_EXTENSION_LENGTH));
 
@@ -103,7 +103,7 @@ public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReload
 
     /** Main-thread processing, runs after prepare concludes **/
     @Override
-    protected void apply(final Map<ResourceLocation, FINE> processedData, final ResourceManager resourceManager, final ProfilerFiller profiler)
+    protected void apply(final Map<Identifier, FINE> processedData, final ResourceManager resourceManager, final ProfilerFiller profiler)
     {
         // now that we're on the main thread, we can finalize the data
         this.data = processedData;

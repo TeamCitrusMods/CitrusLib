@@ -39,7 +39,8 @@ public class PayloadHelper {
     public void registerProviders(RegisterPayloadHandlersEvent event) {
         synchronized (ALL_PROVIDERS) {
             for (PayloadProvider prov : ALL_PROVIDERS.values()) {
-                NetworkRegistry.register(prov.getType(), prov.getCodec(), new PayloadHandler(prov), prov.getSupportedProtocols(), prov.getFlow(), prov.getVersion(), prov.isOptional());
+                NetworkRegistry.register(prov.getType(), prov.getCodec(), new PayloadHandler(prov), new PayloadHandler(prov),
+                        prov.getSupportedProtocols(), prov.getFlow(), prov.getVersion(), prov.isOptional());
             }
             locked = true;
         }

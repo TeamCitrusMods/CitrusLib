@@ -1,7 +1,6 @@
 package dev.teamcitrus.citruslib.event;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 /**
