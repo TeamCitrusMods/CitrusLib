@@ -72,7 +72,6 @@ public class MergeableCodecDataManager<RAW, FINE> extends SimplePreparableReload
     /** Off-thread processing (can include reading files from hard drive) **/
     @Override
     protected Map<ResourceLocation, FINE> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
-        LOGGER.info("Beginning loading of data for data loader: {}", this.folderName);
         final Map<ResourceLocation, FINE> map = new HashMap<>();
 
         Map<ResourceLocation, List<Resource>> resourceStacks = resourceManager.listResourceStacks(this.folderName, id -> id.getPath().endsWith(JSON_EXTENSION));
